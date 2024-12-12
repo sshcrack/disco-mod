@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "disco_lasers",
+  "version": "${version}",
+  "name": "disco-lasers-voice",
+  "description": "LASER LASER LASER LASER LASER LASER",
+  "authors": [
+    "sshcrack"
+  ],
+  "contact": {
+    "homepage": "https://sshcrack.me",
+    "sources": "https://github.com/sshcrack/disco-lasers-voice"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/disco_lasers/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.sshcrack.disco_lasers.DiscoLasersVoice"
+    ],
+    "client": [
+      "me.sshcrack.disco_lasers.DiscoLasersVoiceClient"
+    ],
+    "voicechat": [
+      "me.sshcrack.disco_lasers.VoiceChatServerPlugin"
+    ]
+  },
+  "mixins": [
+    "disco_lasers.mixins.json",
+    {
+      "config": "disco_lasers.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*",
+    "voicechat": ">=${minecraft_version}-${voicechat_api_version}",
+    "prism": ">=${prism_version}"
+  },
+  "suggests": {}
+}
