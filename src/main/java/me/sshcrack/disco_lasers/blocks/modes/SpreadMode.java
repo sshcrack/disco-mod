@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.sshcrack.disco_lasers.ModDataComponents;
+import me.sshcrack.disco_lasers.util.color.LaserColor;
 import net.minecraft.text.Text;
 import net.minecraft.util.dynamic.Codecs;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class SpreadMode extends LaserMode {
     public static MapCodec<SpreadMode> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
-                    ModDataComponents.DYNAMIC_COLOR_CODEC.listOf().fieldOf("lasers")
+                    LaserColor.CODEC.listOf().fieldOf("lasers")
                             .forGetter(SpreadMode::getLasers),
                     Codec.FLOAT.fieldOf("spread_angle")
                             .forGetter(SpreadMode::getSpreadAngle),
@@ -25,12 +26,12 @@ public class SpreadMode extends LaserMode {
     );
 
 
-    private final List<IColor> lasers;
+    private final List<LaserColor> lasers;
     private float spreadAngle;
     private float tiltAngle;
     private int laserMultiplier;
 
-    public SpreadMode(List<IColor> lasers, float spreadAngle, float tiltAngle, int laserMultiplier) {
+    public SpreadMode(List<LaserColor> lasers, float spreadAngle, float tiltAngle, int laserMultiplier) {
         this.lasers = lasers;
         this.spreadAngle = spreadAngle;
         this.tiltAngle = tiltAngle;
@@ -38,7 +39,7 @@ public class SpreadMode extends LaserMode {
     }
 
 
-    public List<IColor> getLasers() {
+    public List<LaserColor> getLasers() {
         return lasers;
     }
 

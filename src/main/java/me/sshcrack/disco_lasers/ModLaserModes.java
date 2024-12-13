@@ -1,33 +1,16 @@
 package me.sshcrack.disco_lasers;
 
 import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
-import me.sshcrack.disco_lasers.blocks.modes.LaserModeRegistryEntry;
+import me.sshcrack.disco_lasers.blocks.modes.RandomMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
+import me.sshcrack.disco_lasers.util.GeneralRegistry;
+import me.sshcrack.disco_lasers.util.GeneralRegistryEntry;
 
 public class ModLaserModes {
-    public static HashMap<Identifier, LaserModeRegistryEntry<?>> MODES = new HashMap<>();
-
-    public static void registerMode(Identifier identifier, LaserModeRegistryEntry<?> registryEntry) {
-        MODES.put(identifier, registryEntry);
-    }
-
-    @Nullable
-    public static <T extends LaserMode> Identifier getId(T mode) {
-        for (var entry : MODES.entrySet()) {
-            if (!entry.getValue().modeClass().isInstance(mode))
-                continue;
-
-            return entry.getKey();
-        }
-
-        return null;
-    }
+    public static final GeneralRegistry<LaserMode> REGISTRY = new GeneralRegistry<>();
 
     public static void initialize() {
-        registerMode(DiscoLasersVoice.ref("spread_mode"), new LaserModeRegistryEntry<>(SpreadMode.class, SpreadMode.CODEC));
+        REGISTRY.register(DiscoLasersVoice.ref("spread_mode"), new GeneralRegistryEntry<>(SpreadMode.class, SpreadMode.CODEC));
+        REGISTRY.register(DiscoLasersVoice.ref("random_mode"), new GeneralRegistryEntry<>(RandomMode.class, RandomMode.CODEC));
     }
 }

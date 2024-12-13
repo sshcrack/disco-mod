@@ -13,6 +13,7 @@ public class DiscoLasersVoice implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ModLaserColor.initialize();
         ModLaserModes.initialize();
         ModDataComponents.initialize();
         ModBlockEntityTypes.initialize();

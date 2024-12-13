@@ -19,15 +19,12 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
 
         float deltaRotation = (MathHelper.floorMod(worldTime, 40) + tickDelta) / (40.0f / 2) - 1.0f;
         float radDelta = MathHelper.sin(deltaRotation * MathHelper.PI);
-        var axisAngle = new AxisAngle4f(radDelta * mode.getSpreadAngle(), 1, -1f, 0f);
+        var axisAngle = new AxisAngle4f(radDelta * mode.getTiltAngle(), 1, -1f, 0f);
 
         var rotation = new Quaternionf().rotationAxis(axisAngle);
 
         matrixStack.push();
-        matrixStack.translate(0.05, 0.5, 0.5);
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
-        matrixStack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(270 - 45));
-        matrixStack.push();
+        matrixStack.multiply(RotationAxis.NEGATIVE_Z.rotation(-(mode.getSpreadAngle() / 2f)));
         matrixStack.multiply(rotation);
         matrixStack.push();
 
@@ -35,16 +32,17 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
         var amount = mode.getLaserMultiplier();
         var total = lasers.size() * amount;
         for (int i = 0; i < total; i++) {
-            var spacing = RotationAxis.NEGATIVE_Z.rotationDegrees((float) i / ((float) (total - 1)) * 90f);
+            var spacing = RotationAxis.NEGATIVE_Z.rotation((float) i / ((float) (total - 1)) * mode.getSpreadAngle());
 
             matrixStack.push();
-            var laser = lasers.get(i / amount);
+            var laserColor = lasers.get(i / amount);
+            laserColor.tick(worldTime, tickDelta);
+
             matrixStack.multiply(spacing);
-            renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, k, 10, laser.getIntValue());
+            renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, k, 10, laserColor.getARGB());
             matrixStack.pop();
         }
 
-        matrixStack.pop();
         matrixStack.pop();
         matrixStack.pop();
     }
