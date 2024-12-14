@@ -18,6 +18,7 @@ repositories {
     // for more information about repositories.
 
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
+    maven { url 'https://maven.wispforest.io/releases/' }
 
     maven {
         name = "Modrinth"
@@ -54,6 +55,9 @@ dependencies {
 
     // modImplementation "maven.modrinth:kowis-laser-mod:1.1.1"
 
+
+    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+    include "io.wispforest:owo-sentinel:${project.owo_version}"
 }
 
 processResources {
@@ -61,12 +65,14 @@ processResources {
     inputs.property "minecraft_version", project.minecraft_version
     inputs.property "voicechat_api_version", project.voicechat_api_version
     inputs.property "prism_version", project.prism_version
+    inputs.property "owo_version", project.owo_version
 
     filesMatching("fabric.mod.json") {
         expand("version": project.version,
                 "minecraft_version": project.minecraft_version,
                 "voicechat_api_version": project.voicechat_api_version,
-                "prism_version": project.prism_version)
+                "prism_version": project.prism_version,
+                "owo_version": project.owo_version)
     }
 }
 

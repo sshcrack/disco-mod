@@ -1,21 +1,23 @@
 package me.sshcrack.disco_lasers.blocks.modes;
 
-import com.anthonyhilyard.prism.util.IColor;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import me.sshcrack.disco_lasers.ModDataComponents;
+import io.wispforest.owo.ui.component.DiscreteSliderComponent;
+import io.wispforest.owo.ui.core.Component;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
 import net.minecraft.text.Text;
 import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.util.math.MathHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpreadMode extends LaserMode {
     public static MapCodec<SpreadMode> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
-                    LaserColor.CODEC.listOf().fieldOf("lasers")
-                            .forGetter(SpreadMode::getLasers),
+                    LaserColor.CODEC.listOf().fieldOf("colors")
+                            .forGetter(SpreadMode::getColors),
                     Codec.FLOAT.fieldOf("spread_angle")
                             .forGetter(SpreadMode::getSpreadAngle),
                     Codec.FLOAT.fieldOf("tiltAngle")
@@ -26,21 +28,19 @@ public class SpreadMode extends LaserMode {
     );
 
 
-    private final List<LaserColor> lasers;
     private float spreadAngle;
     private float tiltAngle;
     private int laserMultiplier;
 
-    public SpreadMode(List<LaserColor> lasers, float spreadAngle, float tiltAngle, int laserMultiplier) {
-        this.lasers = lasers;
+    public SpreadMode() {
+        this(List.of(), 45 * MathHelper.RADIANS_PER_DEGREE, 10 * MathHelper.RADIANS_PER_DEGREE, 1);
+    }
+
+    public SpreadMode(List<LaserColor> colors, float spreadAngle, float tiltAngle, int laserMultiplier) {
+        super(colors);
         this.spreadAngle = spreadAngle;
         this.tiltAngle = tiltAngle;
         this.laserMultiplier = laserMultiplier;
-    }
-
-
-    public List<LaserColor> getLasers() {
-        return lasers;
     }
 
     public float getSpreadAngle() {
@@ -69,6 +69,11 @@ public class SpreadMode extends LaserMode {
 
     @Override
     public Text getDisplayName() {
-        return Text.translatable("block.laser_block.modes.spread");
+        return Text.translatable("block.disco_lasers.laser_block.modes.spread");
+    }
+
+    @Override
+    public LaserMode clone() {
+        return new SpreadMode(new ArrayList<>(colors), spreadAngle, tiltAngle, laserMultiplier);
     }
 }

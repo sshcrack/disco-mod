@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.sshcrack.disco_lasers.DiscoLasersVoice"
+      "me.sshcrack.disco_lasers.DiscoLasers"
     ],
     "client": [
-      "me.sshcrack.disco_lasers.DiscoLasersVoiceClient"
+      "me.sshcrack.disco_lasers.DiscoLasersClient"
     ],
     "voicechat": [
       "me.sshcrack.disco_lasers.VoiceChatServerPlugin"
@@ -38,7 +38,8 @@
     "java": ">=21",
     "fabric-api": "*",
     "voicechat": ">=${minecraft_version}-${voicechat_api_version}",
-    "prism": ">=${prism_version}"
+    "prism": ">=${prism_version}",
+    "owo-lib": ">=${owo_version}"
   },
   "suggests": {}
 }

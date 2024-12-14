@@ -1,4 +1,4 @@
-package me.sshcrack.disco_lasers;
+package me.sshcrack.disco_lasers.registries;
 
 import me.sshcrack.disco_lasers.blocks.LaserBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

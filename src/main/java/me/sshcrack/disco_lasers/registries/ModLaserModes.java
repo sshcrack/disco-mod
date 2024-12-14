@@ -1,5 +1,6 @@
-package me.sshcrack.disco_lasers;
+package me.sshcrack.disco_lasers.registries;
 
+import me.sshcrack.disco_lasers.DiscoLasers;
 import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
 import me.sshcrack.disco_lasers.blocks.modes.RandomMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
@@ -10,7 +11,7 @@ public class ModLaserModes {
     public static final GeneralRegistry<LaserMode> REGISTRY = new GeneralRegistry<>();
 
     public static void initialize() {
-        REGISTRY.register(DiscoLasersVoice.ref("spread_mode"), new GeneralRegistryEntry<>(SpreadMode.class, SpreadMode.CODEC));
-        REGISTRY.register(DiscoLasersVoice.ref("random_mode"), new GeneralRegistryEntry<>(RandomMode.class, RandomMode.CODEC));
+        REGISTRY.register(DiscoLasers.ref("spread_mode"), new GeneralRegistryEntry<>(SpreadMode.class, SpreadMode.CODEC), SpreadMode::new);
+        REGISTRY.register(DiscoLasers.ref("random_mode"), new GeneralRegistryEntry<>(RandomMode.class, RandomMode.CODEC), RandomMode::new);
     }
 }

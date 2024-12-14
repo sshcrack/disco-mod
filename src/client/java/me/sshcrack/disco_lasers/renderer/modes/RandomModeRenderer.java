@@ -17,11 +17,12 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
     private LaserInfo[] lasers = new LaserInfo[]{};
 
 
-    public record LaserInfo(LaserColor color, float rotX, float rotY, float rotZ, long creationTime, float deltaOffset) {
+    public record LaserInfo(LaserColor color, float rotX, float rotY, float rotZ, long creationTime,
+                            float deltaOffset) {
     }
 
     private LaserInfo generateRandom(RandomMode mode, long worldTime, float maxAngle) {
-        var colors = mode.getAvailableColors();
+        var colors = mode.getColors();
 
         var color = colors.get(random.nextInt(colors.size()));
         return new LaserInfo(color, random.nextFloat() * maxAngle, random.nextFloat() * maxAngle, random.nextFloat() * maxAngle, worldTime, random.nextFloat());
@@ -58,7 +59,7 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
             var deltaX = laser.rotX * deltaAge + laser.rotX / 2;
             var deltaY = laser.rotY * deltaAge * laser.deltaOffset + laser.rotY / 2;
             var deltaZ = laser.rotZ * deltaAge * -laser.deltaOffset + laser.rotZ / 2;
-                    matrixStack.multiply(new Quaternionf().rotateXYZ(deltaX, deltaY, deltaZ));
+            matrixStack.multiply(new Quaternionf().rotateXYZ(deltaX, deltaY, deltaZ));
             renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, 0, 10, laser.color.getARGB());
             matrixStack.pop();
         }

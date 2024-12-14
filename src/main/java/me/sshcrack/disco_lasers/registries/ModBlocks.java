@@ -1,5 +1,6 @@
-package me.sshcrack.disco_lasers;
+package me.sshcrack.disco_lasers.registries;
 
+import me.sshcrack.disco_lasers.DiscoLasers;
 import me.sshcrack.disco_lasers.blocks.LaserBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -10,7 +11,7 @@ import net.minecraft.registry.Registry;
 
 public class ModBlocks {
     public static <T extends Block> T register(String name, T block, boolean shouldRegisterItem) {
-        var id = DiscoLasersVoice.ref(name);
+        var id = DiscoLasers.ref(name);
 
         // Sometimes, you may not want to register an item for the block.
         // Eg: if it's a technical block like `minecraft:air` or `minecraft:end_gateway`

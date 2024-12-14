@@ -1,24 +1,31 @@
 package me.sshcrack.disco_lasers.blocks;
 
-import me.sshcrack.disco_lasers.ModBlockEntityTypes;
-import me.sshcrack.disco_lasers.ModDataComponents;
 import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
-import me.sshcrack.disco_lasers.blocks.modes.RandomMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
+import me.sshcrack.disco_lasers.registries.ModBlockEntityTypes;
+import me.sshcrack.disco_lasers.registries.ModDataComponents;
+import me.sshcrack.disco_lasers.screen.SingleLaserScreenHandler;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
 import me.sshcrack.disco_lasers.util.color.RainbowColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LaserBlockEntity extends BlockEntity {
+public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerFactory {
     private static List<LaserColor> createRainbowColors(int amount) {
         var colors = new LaserColor[amount];
         for (int i = 0; i < amount; i++) {
@@ -69,5 +76,19 @@ public class LaserBlockEntity extends BlockEntity {
             mode = createFallback();
 
         return mode;
+    }
+
+    public void setLaserMode(LaserMode mode) {
+        this.mode = mode;
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return Text.empty();
+    }
+
+    @Override
+    public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new SingleLaserScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
     }
 }

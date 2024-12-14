@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
-import static me.sshcrack.disco_lasers.DiscoLasersVoice.ref;
+import static me.sshcrack.disco_lasers.DiscoLasers.ref;
 
 public abstract class LaserModeRenderer<T extends LaserMode> {
     public static final Identifier LASER_TEXTURE = ref("textures/entity/laser.png");

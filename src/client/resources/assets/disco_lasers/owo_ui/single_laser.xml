@@ -1,0 +1,321 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children> <!---->
+                <flow-layout direction="vertical"> <!---->
+                    <children>
+                        <label>
+                            <text>Laser Configuration</text>
+                        </label>
+                        <spacer>
+                            <sizing>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </spacer>
+                        <flow-layout direction="vertical">
+                            <children>
+                                <collapsible id="collapsible-mode">
+                                    <children>
+                                        <dropdown id="mode-select">
+                                            <allow-overflow>true</allow-overflow>
+                                            <entries>
+                                                <button>
+                                                    <text>Random</text>
+                                                </button>
+                                                <button>
+                                                    <text>Spread</text>
+                                                </button>
+                                            </entries>
+                                        </dropdown>
+                                    </children>
+                                    <text>Mode: Random</text>
+                                </collapsible>
+
+                                <flow-layout direction="horizontal" id="mode-settings">
+                                    <!--suppress CheckTagEmptyBody Used programmatically-->
+                                    <children></children>
+                                </flow-layout>
+
+                                <flow-layout direction="horizontal">
+                                    <children>
+                                        <label id="current-colors">
+                                            <text>Current Colors: 10</text>
+                                        </label>
+                                        <button>
+                                            <text>Clear</text>
+                                            <renderer>
+                                                <flat color="dark-red" hovered-color="red" disabled-color="gray"/>
+                                            </renderer>
+                                        </button>
+                                    </children>
+                                    <gap>10</gap>
+                                    <vertical-alignment>center</vertical-alignment>
+                                </flow-layout>
+                            </children>
+                            <gap>10</gap>
+                        </flow-layout>
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <label>
+                                    <text>Color:</text>
+                                </label>
+                                <flow-layout direction="horizontal" id="color-select">
+                                    <children>
+                                    </children>
+                                    <gap>5</gap>
+                                </flow-layout>
+                            </children>
+
+                            <horizontal-alignment>center</horizontal-alignment>
+                            <vertical-alignment>center</vertical-alignment>
+                            <gap>10</gap>
+                        </flow-layout>
+
+                        <flow-layout direction="horizontal" id="color-settings">
+                            <!--suppress CheckTagEmptyBody Used programmatically-->
+                            <children></children>
+                        </flow-layout>
+
+                        <button id="add-color">
+                            <text>Add Color</text>
+                        </button>
+                        <button id="add-color-5x">
+                            <text>5x Add Color</text>
+                        </button>
+
+                        <spacer>
+                            <sizing>
+                                <vertical method="fixed">30</vertical>
+                            </sizing>
+                        </spacer>
+                        <button>
+                            <text>Update</text>
+                        </button>
+                    </children>
+
+
+                    <!---->
+                    <padding>
+                        <all>10</all>
+                    </padding>
+
+                    <surface>
+                        <blur quality="20" size="20"/>
+                        <outline>green</outline>
+                    </surface>
+                    <sizing>
+                        <vertical method="fixed">300</vertical>
+                        <horizontal method="fixed">300</horizontal>
+                    </sizing>
+
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <gap>10</gap>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <!---->
+            <surface>
+                <blur quality="1" size="0"/>
+            </surface>
+        </flow-layout>
+    </components>
+
+    <templates>
+        <template name="color.static">
+            <color-picker id="static-color">
+                <show-alpha>false</show-alpha>
+                <sizing>
+                    <horizontal method="fixed">70</horizontal>
+                    <vertical method="fixed">70</vertical>
+                </sizing>
+            </color-picker>
+        </template>
+        <template name="color.rainbow">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Offset</text>
+                            </label>
+                            <discrete-slider min="0" max="1" id="rainbow-offset">
+                                <decimal-places>3</decimal-places>
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                                <tooltip-text>Offset</tooltip-text>
+                            </discrete-slider>
+                            <checkbox>
+                                <text>Calculate Offset</text>
+                            </checkbox>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Speed</text>
+                            </label>
+                            <discrete-slider id="rainbow-speed" min="0" max="1000">
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                                <tooltip-text>Speed</tooltip-text>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+                </children>
+                <gap>10</gap>
+            </flow-layout>
+
+        </template>
+
+
+        <!-- ============-->
+        <!-- MODES -->
+        <!-- ============-->
+
+
+        <template name="mode.random">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Max Angle</text>
+                            </label>
+                            <discrete-slider min="0" max="180" id="mode.random.max-angle">
+                                <decimal-places>1</decimal-places>
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Max Age</text>
+                            </label>
+                            <discrete-slider min="0" max="10" id="mode.random.laser-age">
+                                <decimal-places>2</decimal-places>
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Speed</text>
+                            </label>
+                            <discrete-slider id="mode.random.laser-speed" min="0" max="1000">
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                                <tooltip-text>Speed</tooltip-text>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Laser Amount</text>
+                            </label>
+                            <discrete-slider id="mode.random.laser-amount" min="0" max="50">
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+                </children>
+                <gap>10</gap>
+            </flow-layout>
+        </template>
+
+
+        <template name="mode.spread">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Spread Angle</text>
+                            </label>
+                            <discrete-slider min="0" max="180" id="mode.random.spread-angle">
+                                <decimal-places>1</decimal-places>
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Tilt Angle</text>
+                            </label>
+                            <discrete-slider min="0" max="180" id="mode.random.tilt-angle">
+                                <decimal-places>1</decimal-places>
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Laser Amount</text>
+                            </label>
+                            <discrete-slider id="mode.random.laser-amount" min="0" max="50">
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+                </children>
+                <gap>10</gap>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>

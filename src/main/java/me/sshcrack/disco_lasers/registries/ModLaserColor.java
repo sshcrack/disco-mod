@@ -1,5 +1,6 @@
-package me.sshcrack.disco_lasers;
+package me.sshcrack.disco_lasers.registries;
 
+import me.sshcrack.disco_lasers.DiscoLasers;
 import me.sshcrack.disco_lasers.util.GeneralRegistry;
 import me.sshcrack.disco_lasers.util.GeneralRegistryEntry;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
@@ -10,7 +11,7 @@ public class ModLaserColor {
     public static final GeneralRegistry<LaserColor> REGISTRY = new GeneralRegistry<>();
 
     public static void initialize() {
-        REGISTRY.register(DiscoLasersVoice.ref("static_color"), new GeneralRegistryEntry<>(StaticColor.class, StaticColor.CODEC));
-        REGISTRY.register(DiscoLasersVoice.ref("rainbow_color"), new GeneralRegistryEntry<>(RainbowColor.class, RainbowColor.CODEC));
+        REGISTRY.register(DiscoLasers.ref("static_color"), new GeneralRegistryEntry<>(StaticColor.class, StaticColor.CODEC), () -> new StaticColor(0xFF0000));
+        REGISTRY.register(DiscoLasers.ref("rainbow_color"), new GeneralRegistryEntry<>(RainbowColor.class, RainbowColor.CODEC), RainbowColor::new);
     }
 }

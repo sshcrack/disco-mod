@@ -28,7 +28,7 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
         matrixStack.multiply(rotation);
         matrixStack.push();
 
-        var lasers = mode.getLasers();
+        var lasers = mode.getColors();
         var amount = mode.getLaserMultiplier();
         var total = lasers.size() * amount;
         for (int i = 0; i < total; i++) {
