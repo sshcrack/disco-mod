@@ -3,17 +3,19 @@ package me.sshcrack.disco_lasers.blocks.modes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.wispforest.owo.ui.component.DiscreteSliderComponent;
-import io.wispforest.owo.ui.core.Component;
+import me.sshcrack.disco_lasers.screen.UiManageable;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
 import net.minecraft.text.Text;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RandomMode extends LaserMode {
+    public static MutableObject<UiManageable.UiManageableFactory<RandomMode>> UI_FACTORY = new MutableObject<>();
+
     public static MapCodec<RandomMode> CODEC = RecordCodecBuilder.mapCodec(e ->
             e.group(
                     Codec.FLOAT.fieldOf("max_angle")
@@ -35,6 +37,7 @@ public class RandomMode extends LaserMode {
     private float laserAge;
     private float laserSpeed;
     private int laserAmount;
+    private UiManageable<RandomMode> ui;
 
     public RandomMode() {
         this(45 * MathHelper.RADIANS_PER_DEGREE, 3, 1, 5, List.of());
@@ -84,35 +87,20 @@ public class RandomMode extends LaserMode {
 
     @Override
     public Text getDisplayName() {
-        return Text.translatable("block.laser_block.modes.random");
+        return Text.translatable("block.disco_lasers.laser_block.modes.random");
     }
 
-
-    @Override
-    public void initializeUI(Component parent) {
-        var maxAngle = (DiscreteSliderComponent) parent.id("mode.random.max-angle");
-        var laserAge = (DiscreteSliderComponent) parent.id("mode.random.laser-age");
-        var laserSpeed = (DiscreteSliderComponent) parent.id("mode.random.laser-speed");
-        var laserAmount = (DiscreteSliderComponent) parent.id("mode.random.laser-amount");
-
-        maxAngle.value(this.maxAngle);
-        laserAge.value(this.laserAge);
-        laserSpeed.value(this.laserSpeed);
-        laserAmount.value(this.laserAmount);
-
-        maxAngle.onChanged().subscribe(e -> setMaxAngle((float) e));
-        laserAge.onChanged().subscribe(e -> setLaserAge((float) e));
-        laserSpeed.onChanged().subscribe(e -> setLaserSpeed((float) e));
-        laserAmount.onChanged().subscribe(e -> setLaserAmount((int) e));
-    }
-
-    @Override
-    public String getTemplateName() {
-        return "mode.random";
-    }
 
     @Override
     public LaserMode clone() {
         return new RandomMode(maxAngle, laserAge, laserSpeed, laserAmount, new ArrayList<>(colors));
+    }
+
+    @Override
+    public UiManageable<? extends LaserMode> getUI() {
+        if (ui == null)
+            ui = UI_FACTORY.getValue().create(this);
+
+        return ui;
     }
 }

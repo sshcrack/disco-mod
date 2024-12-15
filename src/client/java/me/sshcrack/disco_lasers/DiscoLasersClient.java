@@ -9,6 +9,7 @@ import me.sshcrack.disco_lasers.renderer.modes.RandomModeRenderer;
 import me.sshcrack.disco_lasers.renderer.modes.SpreadModeRenderer;
 import me.sshcrack.disco_lasers.renderer.modes.registry.LaserModeRendererRegistry;
 import me.sshcrack.disco_lasers.ui.SingleLaserScreen;
+import me.sshcrack.disco_lasers.ui.initializers.ManageableRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
@@ -21,6 +22,8 @@ public class DiscoLasersClient implements ClientModInitializer {
 
         LaserModeRendererRegistry.register(SpreadMode.class, SpreadModeRenderer::new);
         LaserModeRendererRegistry.register(RandomMode.class, RandomModeRenderer::new);
+
+        ManageableRegistry.initialize();
 
         HandledScreens.register(ModHandledScreens.SINGLE_LASER_HANDLE_TYPE, SingleLaserScreen::new);
     }

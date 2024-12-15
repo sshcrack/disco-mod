@@ -1,28 +1,33 @@
 package me.sshcrack.disco_lasers.screen;
 
-import io.wispforest.owo.client.screens.SyncedProperty;
+import io.wispforest.endec.Endec;
+import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import me.sshcrack.disco_lasers.blocks.LaserBlockEntity;
 import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
 import me.sshcrack.disco_lasers.registries.ModHandledScreens;
-import me.sshcrack.disco_lasers.util.color.LaserColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.server.world.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 
 public class SingleLaserScreenHandler extends ScreenHandler {
-    private static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
-    private static final char[] CONSONANTS = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
+    public static final Endec<LaserMode> LASER_MODE_ENDEC = NbtEndec.ELEMENT.xmap(
+            nbt -> LaserMode.LASER_CODEC.decode(NbtOps.INSTANCE, nbt).getOrThrow().getFirst(),
+            e -> LaserMode.LASER_CODEC.encodeStart(NbtOps.INSTANCE, e).getOrThrow()
+    );
 
     private final ScreenHandlerContext context;
-    private boolean blockEntityExists = true;
+    private final List<Consumer<LaserMode>> initialModeListeners = new ArrayList<>();
 
-    public final SyncedProperty<LaserMode> laserMode;
+    private LaserMode laserMode;
 
     public SingleLaserScreenHandler(int syncId, PlayerInventory inventory) {
         this(syncId, inventory, ScreenHandlerContext.EMPTY);
@@ -41,49 +46,26 @@ public class SingleLaserScreenHandler extends ScreenHandler {
         super(ModHandledScreens.SINGLE_LASER_HANDLE_TYPE, syncId);
         this.context = context;
 
-        this.laserMode = this.createProperty(LaserMode.class, null);
-        var blockEntity = getBlockEntity();
-        if (blockEntity != null) {
-            this.laserMode.set(blockEntity.getLaserMode());
-        }
-
-        addEventListeners();
-    }
-
-    private void addEventListeners() {
-        if (context == ScreenHandlerContext.EMPTY)
-            return;
-
-        laserMode.observe(mode -> {
-            context.run((world, pos) -> {
-                var entity = world.getBlockEntity(pos);
-                if (!(entity instanceof LaserBlockEntity laser)) {
-                    blockEntityExists = false;
-                    return;
-                }
-
-                laser.setLaserMode(mode);
-            });
+        this.endecBuilder().register(LASER_MODE_ENDEC, LaserMode.class);
+        this.addServerboundMessage(SetBlockEntityLaserMode.class, this::handleSetBlockEntity);
+        this.addClientboundMessage(SetInitialMode.class, msg -> {
+            laserMode = msg.mode;
+            initialModeListeners.forEach(listener -> listener.accept(msg.mode));
         });
     }
 
-
-    // made originally by det hoonter tm
-    private static String generateEpicName() {
-        var sb = new StringBuilder();
-
-        for (int i = 0; i < 4; ++i) {
-            var consonant = CONSONANTS[ThreadLocalRandom.current().nextInt(CONSONANTS.length)];
-
-            if (i == 0) consonant = Character.toUpperCase(consonant);
-
-            sb.append(consonant);
-            sb.append(VOWELS[ThreadLocalRandom.current().nextInt(VOWELS.length)]);
-        }
-
-        return sb.toString();
+    public void sendInitialPacket() {
+        var blockEntity = getBlockEntity();
+        if (blockEntity != null)
+            sendMessage(new SetInitialMode(blockEntity.getLaserMode()));
     }
 
+    public void registerInitialModeListener(Consumer<LaserMode> listener, boolean notifyIfAlreadySet) {
+        initialModeListeners.add(listener);
+
+        if (notifyIfAlreadySet && laserMode != null)
+            listener.accept(laserMode);
+    }
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
@@ -92,15 +74,31 @@ public class SingleLaserScreenHandler extends ScreenHandler {
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return blockEntityExists;
+        return true;
     }
 
-    public record LaserColorList(List<LaserColor> colors) {
+    /**
+     * Packet to be sent when the client opens the screen
+     */
+    public record SetInitialMode(LaserMode mode) {
+
     }
 
-    public record EpicMessage(int number) {
+    private void handleSetBlockEntity(SetBlockEntityLaserMode msg) {
+        var blockEntity = getBlockEntity();
+        if (blockEntity == null)
+            return;
+
+        blockEntity.setLaserMode(msg.mode);
+        this.context.run((world, pos) -> {
+            ((ServerWorld) world).getChunkManager().markForUpdate(pos);
+        });
     }
 
-    public record MaldMessage(int number) {
+    /**
+     * Packet to be sent when the client changes the mode
+     */
+    public record SetBlockEntityLaserMode(LaserMode mode) {
+
     }
 }

@@ -3,17 +3,19 @@ package me.sshcrack.disco_lasers.blocks.modes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.wispforest.owo.ui.component.DiscreteSliderComponent;
-import io.wispforest.owo.ui.core.Component;
+import me.sshcrack.disco_lasers.screen.UiManageable;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
 import net.minecraft.text.Text;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpreadMode extends LaserMode {
+    public static MutableObject<UiManageable.UiManageableFactory<SpreadMode>> UI_FACTORY = new MutableObject<>();
+
     public static MapCodec<SpreadMode> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     LaserColor.CODEC.listOf().fieldOf("colors")
@@ -31,6 +33,7 @@ public class SpreadMode extends LaserMode {
     private float spreadAngle;
     private float tiltAngle;
     private int laserMultiplier;
+    private UiManageable<SpreadMode> ui;
 
     public SpreadMode() {
         this(List.of(), 45 * MathHelper.RADIANS_PER_DEGREE, 10 * MathHelper.RADIANS_PER_DEGREE, 1);
@@ -75,5 +78,13 @@ public class SpreadMode extends LaserMode {
     @Override
     public LaserMode clone() {
         return new SpreadMode(new ArrayList<>(colors), spreadAngle, tiltAngle, laserMultiplier);
+    }
+
+    @Override
+    public UiManageable<? extends LaserMode> getUI() {
+        if (ui == null)
+            ui = UI_FACTORY.getValue().create(this);
+
+        return ui;
     }
 }

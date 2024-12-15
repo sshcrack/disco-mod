@@ -3,7 +3,7 @@
   "package": "me.sshcrack.disco_lasers.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "DynamicColorAccessor"
+    "MixinServerPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1

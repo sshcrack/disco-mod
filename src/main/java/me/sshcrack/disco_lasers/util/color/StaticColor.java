@@ -2,14 +2,15 @@ package me.sshcrack.disco_lasers.util.color;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import io.wispforest.owo.ui.component.ColorPickerComponent;
-import io.wispforest.owo.ui.core.Color;
-import io.wispforest.owo.ui.core.Component;
+import me.sshcrack.disco_lasers.screen.UiManageable;
 import net.minecraft.text.Text;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 public class StaticColor implements LaserColor {
+    public static MutableObject<UiManageable.UiManageableFactory<StaticColor>> UI_FACTORY = new MutableObject<>();
     public static final MapCodec<StaticColor> CODEC = Codec.INT.xmap(StaticColor::new, StaticColor::getARGB).fieldOf("color");
     private int color;
+    private UiManageable<StaticColor> ui;
 
     public StaticColor(int color) {
         this.color = color;
@@ -20,13 +21,12 @@ public class StaticColor implements LaserColor {
         return color;
     }
 
-    @Override
-    public void tick(float worldTick, float delta) {
+    public void setARGB(int color) {
+        this.color = color;
     }
 
     @Override
-    public String getTemplateName() {
-        return "color.static";
+    public void tick(float worldTick, float delta) {
     }
 
     @Override
@@ -36,10 +36,10 @@ public class StaticColor implements LaserColor {
 
 
     @Override
-    public void initializeUI(Component parent) {
-        var picker = ((ColorPickerComponent) parent.id("static-color"));
-        picker.selectedColor(Color.ofArgb(color));
+    public UiManageable<? extends LaserColor> getUI() {
+        if (ui == null)
+            ui = UI_FACTORY.getValue().create(this);
 
-        picker.onChanged().subscribe(e -> color = e.argb());
+        return ui;
     }
 }

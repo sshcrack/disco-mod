@@ -39,7 +39,7 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
         return new SpreadMode(createRainbowColors(100), 180 * MathHelper.RADIANS_PER_DEGREE, 40 * MathHelper.RADIANS_PER_DEGREE, 1);
     }
 
-    public LaserMode mode;
+    protected LaserMode mode;
 
     public LaserBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntityTypes.LASER_BLOCK_ENTITY_TYPE, pos, state);

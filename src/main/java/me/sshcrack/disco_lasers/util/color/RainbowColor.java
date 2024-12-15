@@ -4,12 +4,14 @@ import com.anthonyhilyard.prism.util.ColorUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.wispforest.owo.ui.component.DiscreteSliderComponent;
-import io.wispforest.owo.ui.core.Component;
+import me.sshcrack.disco_lasers.screen.UiManageable;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 public class RainbowColor implements LaserColor {
+    public static MutableObject<UiManageable.UiManageableFactory<RainbowColor>> UI_FACTORY = new MutableObject<>();
+
     public static final MapCodec<RainbowColor> CODEC = RecordCodecBuilder.mapCodec(e ->
             e.group(
                     Codec.FLOAT.fieldOf("offset")
@@ -20,6 +22,7 @@ public class RainbowColor implements LaserColor {
     );
     private float offset;
     private float animationSpeed;
+    private UiManageable<RainbowColor> ui;
 
     public RainbowColor() {
         this(0, 1f);
@@ -45,6 +48,14 @@ public class RainbowColor implements LaserColor {
         return animationSpeed;
     }
 
+    public void setAnimationSpeed(float animationSpeed) {
+        this.animationSpeed = animationSpeed;
+    }
+
+    public void setOffset(float offset) {
+        this.offset = offset;
+    }
+
     @Override
     public void tick(float worldTick, float delta) {
         var time = (worldTick * 0.01F) * 0.2f * animationSpeed + offset;
@@ -53,24 +64,15 @@ public class RainbowColor implements LaserColor {
     }
 
     @Override
-    public String getTemplateName() {
-        return "color.rainbow";
-    }
-
-    @Override
     public Text getDisplayName() {
         return Text.translatable("color.disco_lasers.rainbow");
     }
 
     @Override
-    public void initializeUI(Component parent) {
-        var speed = ((DiscreteSliderComponent) parent.id("rainbow-speed"));
-        var offset = ((DiscreteSliderComponent) parent.id("rainbow-offset"));
+    public UiManageable<? extends LaserColor> getUI() {
+        if (ui == null)
+            ui = UI_FACTORY.getValue().create(this);
 
-        speed.value(this.animationSpeed);
-        offset.value(this.offset);
-
-        speed.onChanged().subscribe(e -> this.animationSpeed = (float) e);
-        offset.onChanged().subscribe(e -> this.offset = (float) e);
+        return ui;
     }
 }

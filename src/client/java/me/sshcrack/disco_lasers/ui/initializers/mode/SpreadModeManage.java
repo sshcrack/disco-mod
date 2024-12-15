@@ -1,9 +1,9 @@
 package me.sshcrack.disco_lasers.ui.initializers.mode;
 
 import io.wispforest.owo.ui.component.DiscreteSliderComponent;
-import io.wispforest.owo.ui.core.Component;
+import io.wispforest.owo.ui.core.ParentComponent;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
-import me.sshcrack.disco_lasers.ui.initializers.UiManageable;
+import me.sshcrack.disco_lasers.screen.UiManageable;
 import net.minecraft.util.math.MathHelper;
 
 public class SpreadModeManage extends UiManageable<SpreadMode> {
@@ -12,10 +12,10 @@ public class SpreadModeManage extends UiManageable<SpreadMode> {
     }
 
     @Override
-    public void initializeUI(Component parent) {
-        var spread = ((DiscreteSliderComponent) parent.id("mode.spread.spread-angle"));
-        var tilt = ((DiscreteSliderComponent) parent.id("mode.spread.tilt-angle"));
-        var multiplier = ((DiscreteSliderComponent) parent.id("mode.spread.laser-multiplier"));
+    public void initializeUI(ParentComponent root) {
+        var spread = root.childById(DiscreteSliderComponent.class, "mode.spread.spread-angle");
+        var tilt = root.childById(DiscreteSliderComponent.class, "mode.spread.tilt-angle");
+        var multiplier = root.childById(DiscreteSliderComponent.class, "mode.spread.laser-multiplier");
 
         spread.value(data.getSpreadAngle());
         tilt.value(data.getTiltAngle());
