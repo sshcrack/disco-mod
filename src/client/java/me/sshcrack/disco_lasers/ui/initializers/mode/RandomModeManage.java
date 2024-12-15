@@ -18,10 +18,10 @@ public class RandomModeManage extends UiManageable<RandomMode> {
         var laserSpeed = root.childById(DiscreteSliderComponent.class, "mode.random.laser-speed");
         var laserAmount = root.childById(DiscreteSliderComponent.class, "mode.random.laser-amount");
 
-        maxAngle.value(data.getMaxAngle());
-        laserAge.value(data.getLaserAge());
-        laserSpeed.value(data.getLaserSpeed());
-        laserAmount.value(data.getLaserAmount());
+        maxAngle.setFromDiscreteValue(data.getMaxAngle());
+        laserAge.setFromDiscreteValue(data.getLaserAge());
+        laserSpeed.setFromDiscreteValue(data.getLaserSpeed());
+        laserAmount.setFromDiscreteValue(data.getLaserAmount());
 
         maxAngle.onChanged().subscribe(e -> data.setMaxAngle((float) e));
         laserAge.onChanged().subscribe(e -> data.setLaserAge((float) e));

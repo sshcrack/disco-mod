@@ -19,7 +19,7 @@ public class RainbowColorManage extends UiManageable<RainbowColor> {
     public void initializeUI(ParentComponent root) {
         var speed = root.childById(DiscreteSliderComponent.class, "rainbow-speed");
 
-        speed.value(data.getAnimationSpeed());
+        speed.setFromDiscreteValue(data.getAnimationSpeed());
         speed.onChanged().subscribe(e -> data.setAnimationSpeed((float) e));
     }
 }

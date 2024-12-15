@@ -17,9 +17,9 @@ public class SpreadModeManage extends UiManageable<SpreadMode> {
         var tilt = root.childById(DiscreteSliderComponent.class, "mode.spread.tilt-angle");
         var multiplier = root.childById(DiscreteSliderComponent.class, "mode.spread.laser-multiplier");
 
-        spread.value(data.getSpreadAngle());
-        tilt.value(data.getTiltAngle());
-        multiplier.value(data.getLaserMultiplier());
+        spread.setFromDiscreteValue(data.getSpreadAngle());
+        tilt.setFromDiscreteValue(data.getTiltAngle());
+        multiplier.setFromDiscreteValue(data.getLaserMultiplier());
 
         spread.onChanged().subscribe(e -> data.setSpreadAngle((float) e * MathHelper.RADIANS_PER_DEGREE));
         tilt.onChanged().subscribe(e -> data.setTiltAngle((float) e * MathHelper.RADIANS_PER_DEGREE));

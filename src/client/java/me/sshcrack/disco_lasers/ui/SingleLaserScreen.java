@@ -113,7 +113,12 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
             var mode = modeConstructor.get();
             if (firstMode == null) firstMode = mode;
 
-            modeSelect.child(Components.button(mode.getDisplayName(), e -> setMode(mode, true)).id("mode-select-" + mode.getUI().getTemplateName()));
+            modeSelect.child(Components.button(mode.getDisplayName(), e -> {
+                var newMode = modeConstructor.get();
+                newMode.setColors(currentMode.getColors());
+
+                setMode(newMode, true);
+            }).id("mode-select-" + mode.getUI().getTemplateName()));
         }
 
         if (firstMode != null)
@@ -204,5 +209,15 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
     @Override
     public void close() {
         super.close();
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        var isOutside = this.isClickOutsideBounds(mouseX, mouseY, x, y, button);
+        if (!isOutside) {
+            sendMode(currentMode);
+        }
+
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 }

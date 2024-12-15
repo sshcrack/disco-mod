@@ -1,0 +1,23 @@
+{
+	"credit": "Made by sshcrack",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "disco_lasers:block/laser_block",
+		"particle": "disco_lasers:block/laser_block"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 1],
+			"to": [12, 6, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 7]},
+			"faces": {
+				"north": {"uv": [8, 0, 12, 3], "texture": "#0"},
+				"east": {"uv": [0, 7.5, 7.5, 10.5], "texture": "#0"},
+				"south": {"uv": [8, 3, 12, 6], "texture": "#0"},
+				"west": {"uv": [7.5, 7.5, 15, 10.5], "texture": "#0"},
+				"up": {"uv": [4, 7.5, 0, 0], "texture": "#0"},
+				"down": {"uv": [8, 0, 4, 7.5], "texture": "#0"}
+			}
+		}
+	]
+}

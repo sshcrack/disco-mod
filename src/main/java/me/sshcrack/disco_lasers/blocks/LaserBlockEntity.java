@@ -3,17 +3,17 @@ package me.sshcrack.disco_lasers.blocks;
 import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
 import me.sshcrack.disco_lasers.registries.ModBlockEntityTypes;
-import me.sshcrack.disco_lasers.registries.ModDataComponents;
 import me.sshcrack.disco_lasers.screen.SingleLaserScreenHandler;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
 import me.sshcrack.disco_lasers.util.color.RainbowColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -46,24 +46,8 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
     }
 
     @Override
-    protected void readComponents(ComponentsAccess components) {
-        super.readComponents(components);
-        mode = components.getOrDefault(ModDataComponents.LASER_MODE, createFallback());
-    }
-
-    @Override
-    protected void addComponents(ComponentMap.Builder builder) {
-        super.addComponents(builder);
-        builder.add(ModDataComponents.LASER_MODE, mode);
-    }
-
-    @Override
     public void removeFromCopiedStackNbt(NbtCompound nbt) {
         nbt.remove("laser_mode");
-    }
-
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
     }
 
 
@@ -90,5 +74,33 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new SingleLaserScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
+    }
+
+
+    @Override
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        if (nbt.contains("laser_mode")) {
+            mode = LaserMode.LASER_CODEC.decode(NbtOps.INSTANCE, nbt.get("laser_mode")).getOrThrow().getFirst();
+        }
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        if (mode != null) {
+            nbt.put("laser_mode", LaserMode.LASER_CODEC.encodeStart(NbtOps.INSTANCE, mode).getOrThrow());
+        }
+    }
+
+
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        var compound = new NbtCompound();
+        writeNbt(compound, registryLookup);
+
+        return compound;
     }
 }

@@ -15,7 +15,6 @@ public class DiscoLasers implements ModInitializer {
     public void onInitialize() {
         ModLaserColor.initialize();
         ModLaserModes.initialize();
-        ModDataComponents.initialize();
         ModHandledScreens.initialize();
 
         ModBlockEntityTypes.initialize();

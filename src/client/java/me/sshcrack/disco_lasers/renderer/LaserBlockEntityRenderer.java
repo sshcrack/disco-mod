@@ -6,6 +6,7 @@ import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
 import me.sshcrack.disco_lasers.renderer.modes.registry.LaserModeRenderer;
 import me.sshcrack.disco_lasers.renderer.modes.registry.LaserModeRendererRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -15,8 +16,10 @@ import net.minecraft.util.math.RotationPropertyHelper;
 
 public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockEntity> {
     private LaserModeRenderer<?> renderer;
+    private final BlockEntityRendererFactory.Context ctx;
 
     public LaserBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        this.ctx = ctx;
     }
 
 
@@ -25,16 +28,29 @@ public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockE
         if (renderer == null || !renderer.underlyingModeClass.isInstance(mode))
             renderer = LaserModeRendererRegistry.createRenderer(mode);
 
-        matrixStack.push();
         BlockState blockState = blockEntity.getCachedState();
 
         int rotationProp = blockState.get(LaserBlock.ROTATION);
         float rotDeg = RotationPropertyHelper.toDegrees(rotationProp);
 
-        matrixStack.translate(0.5, 0.5, 0.5);
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotDeg));
+        matrixStack.push();
 
-        matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
+        matrixStack.translate(0.5, 0, 0.5);
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180 + rotDeg));
+        matrixStack.translate(-0.5, 0, -0.5);
+
+        var layer = RenderLayers.getBlockLayer(blockState);
+        ctx.getRenderManager().renderBlock(
+                blockState,
+                blockEntity.getPos(),
+                blockEntity.getWorld(),
+                matrixStack,
+                vertexConsumerProvider.getBuffer(layer),
+                false,
+                blockEntity.getWorld().random);
+
+        matrixStack.translate(0.5, 0.25, 1.25f / 16f);
+        matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
 
 
         if (!blockEntity.getLaserMode().getColors().isEmpty()) {
