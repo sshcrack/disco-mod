@@ -36,7 +36,7 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
 
     public static LaserMode createFallback() {
         //return new RandomMode(45 * MathHelper.RADIANS_PER_DEGREE, 10, 2f, 50, createRainbowColors(50));
-        return new SpreadMode(createRainbowColors(100), 180 * MathHelper.RADIANS_PER_DEGREE, 40 * MathHelper.RADIANS_PER_DEGREE, 1);
+        return new SpreadMode(createRainbowColors(100), 180 * MathHelper.RADIANS_PER_DEGREE, 40 * MathHelper.RADIANS_PER_DEGREE, 1, 1);
     }
 
     protected LaserMode mode;

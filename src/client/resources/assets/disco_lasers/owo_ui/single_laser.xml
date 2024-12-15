@@ -180,12 +180,13 @@
                             <label>
                                 <text>Speed</text>
                             </label>
-                            <discrete-slider id="rainbow-speed" min="0" max="1000">
+                            <discrete-slider id="rainbow-speed" min="0" max="5">
                                 <sizing>
                                     <horizontal method="fixed">100</horizontal>
                                     <vertical method="fixed">20</vertical>
                                 </sizing>
                                 <tooltip-text>Speed</tooltip-text>
+                                <decimal-places>2</decimal-places>
                             </discrete-slider>
                         </children>
                         <vertical-alignment>center</vertical-alignment>
@@ -305,6 +306,23 @@
                             </label>
                             <discrete-slider min="0" max="180" id="mode.spread.tilt-angle">
                                 <decimal-places>1</decimal-places>
+                                <sizing>
+                                    <horizontal method="fixed">100</horizontal>
+                                    <vertical method="fixed">20</vertical>
+                                </sizing>
+                            </discrete-slider>
+                        </children>
+                        <vertical-alignment>center</vertical-alignment>
+                        <gap>10</gap>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Tilt Angle</text>
+                            </label>
+                            <discrete-slider min="0" max="3" id="mode.spread.tilt-speed">
+                                <decimal-places>2</decimal-places>
                                 <sizing>
                                     <horizontal method="fixed">100</horizontal>
                                     <vertical method="fixed">20</vertical>

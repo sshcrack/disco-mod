@@ -7,8 +7,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-import org.joml.AxisAngle4f;
-import org.joml.Quaternionf;
 
 public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
     @Override
@@ -18,14 +16,10 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
 
 
         float deltaRotation = (MathHelper.floorMod(worldTime, 40) + tickDelta) / (40.0f / 2) - 1.0f;
-        float radDelta = MathHelper.sin(deltaRotation * MathHelper.PI);
-        var axisAngle = new AxisAngle4f(radDelta * mode.getTiltAngle(), 1, -1f, 0f);
-
-        var rotation = new Quaternionf().rotationAxis(axisAngle);
+        float radDelta = MathHelper.sin(deltaRotation * MathHelper.PI * mode.getTiltSpeed());
 
         matrixStack.push();
         matrixStack.multiply(RotationAxis.NEGATIVE_Z.rotation(-(mode.getSpreadAngle() / 2f)));
-        matrixStack.multiply(rotation);
         matrixStack.push();
 
         var lasers = mode.getColors();
@@ -39,6 +33,7 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
             laserColor.tick(worldTime, tickDelta);
 
             matrixStack.multiply(spacing);
+            matrixStack.multiply(RotationAxis.NEGATIVE_X.rotation(radDelta * mode.getTiltAngle()));
             renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, k, 10, laserColor.getARGB());
             matrixStack.pop();
         }

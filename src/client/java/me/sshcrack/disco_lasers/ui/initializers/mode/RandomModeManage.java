@@ -4,6 +4,7 @@ import io.wispforest.owo.ui.component.DiscreteSliderComponent;
 import io.wispforest.owo.ui.core.ParentComponent;
 import me.sshcrack.disco_lasers.blocks.modes.RandomMode;
 import me.sshcrack.disco_lasers.screen.UiManageable;
+import net.minecraft.util.math.MathHelper;
 
 public class RandomModeManage extends UiManageable<RandomMode> {
     public RandomModeManage(RandomMode data) {
@@ -18,13 +19,13 @@ public class RandomModeManage extends UiManageable<RandomMode> {
         var laserSpeed = root.childById(DiscreteSliderComponent.class, "mode.random.laser-speed");
         var laserAmount = root.childById(DiscreteSliderComponent.class, "mode.random.laser-amount");
 
-        maxAngle.setFromDiscreteValue(data.getMaxAngle());
-        laserAge.setFromDiscreteValue(data.getLaserAge());
+        maxAngle.setFromDiscreteValue(data.getMaxAngle() * MathHelper.DEGREES_PER_RADIAN);
+        laserAge.setFromDiscreteValue(data.getLaserAge() * MathHelper.DEGREES_PER_RADIAN);
         laserSpeed.setFromDiscreteValue(data.getLaserSpeed());
         laserAmount.setFromDiscreteValue(data.getLaserAmount());
 
-        maxAngle.onChanged().subscribe(e -> data.setMaxAngle((float) e));
-        laserAge.onChanged().subscribe(e -> data.setLaserAge((float) e));
+        maxAngle.onChanged().subscribe(e -> data.setMaxAngle((float) e * MathHelper.RADIANS_PER_DEGREE));
+        laserAge.onChanged().subscribe(e -> data.setLaserAge((float) e * MathHelper.RADIANS_PER_DEGREE));
         laserSpeed.onChanged().subscribe(e -> data.setLaserSpeed((float) e));
         laserAmount.onChanged().subscribe(e -> data.setLaserAmount((int) e));
     }

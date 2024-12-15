@@ -24,6 +24,8 @@ public class SpreadMode extends LaserMode {
                             .forGetter(SpreadMode::getSpreadAngle),
                     Codec.FLOAT.fieldOf("tiltAngle")
                             .forGetter(SpreadMode::getTiltAngle),
+                    Codec.FLOAT.fieldOf("tiltSpeed")
+                            .forGetter(SpreadMode::getTiltSpeed),
                     Codecs.POSITIVE_INT.fieldOf("laserMultiplier")
                             .forGetter(SpreadMode::getLaserMultiplier)
             ).apply(instance, SpreadMode::new)
@@ -32,18 +34,25 @@ public class SpreadMode extends LaserMode {
 
     private float spreadAngle;
     private float tiltAngle;
+    private float tiltSpeed;
+
     private int laserMultiplier;
     private UiManageable<SpreadMode> ui;
 
     public SpreadMode() {
-        this(List.of(), 45 * MathHelper.RADIANS_PER_DEGREE, 10 * MathHelper.RADIANS_PER_DEGREE, 1);
+        this(List.of(), 45 * MathHelper.RADIANS_PER_DEGREE, 10 * MathHelper.RADIANS_PER_DEGREE, 1f, 1);
     }
 
-    public SpreadMode(List<LaserColor> colors, float spreadAngle, float tiltAngle, int laserMultiplier) {
+    public SpreadMode(List<LaserColor> colors, float spreadAngle, float tiltAngle, float tiltSpeed, int laserMultiplier) {
         super(colors);
         this.spreadAngle = spreadAngle;
         this.tiltAngle = tiltAngle;
         this.laserMultiplier = laserMultiplier;
+        this.tiltSpeed = tiltSpeed;
+    }
+
+    public float getTiltSpeed() {
+        return tiltSpeed;
     }
 
     public float getSpreadAngle() {
@@ -70,14 +79,13 @@ public class SpreadMode extends LaserMode {
         this.spreadAngle = spreadAngle;
     }
 
-    @Override
-    public Text getDisplayName() {
-        return Text.translatable("block.disco_lasers.laser_block.modes.spread");
+    public void setTiltSpeed(float tiltSpeed) {
+        this.tiltSpeed = tiltSpeed;
     }
 
     @Override
-    public LaserMode clone() {
-        return new SpreadMode(new ArrayList<>(colors), spreadAngle, tiltAngle, laserMultiplier);
+    public Text getDisplayName() {
+        return Text.translatable("block.disco_lasers.laser_block.modes.spread");
     }
 
     @Override

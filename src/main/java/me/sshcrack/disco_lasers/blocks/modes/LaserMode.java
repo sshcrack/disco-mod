@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LaserMode implements Cloneable {
+public abstract class LaserMode {
     public static Codec<LaserMode> LASER_CODEC = ModLaserModes.REGISTRY.getSerializableCodec();
 
     public abstract Text getDisplayName();
@@ -31,9 +31,6 @@ public abstract class LaserMode implements Cloneable {
     public void addColor(LaserColor color) {
         this.colors.add(color);
     }
-
-    @Override
-    public abstract LaserMode clone();
 
     public abstract UiManageable<? extends LaserMode> getUI();
 }
