@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.sshcrack.disco_lasers.screen.UiManageable;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
+import me.sshcrack.disco_lasers.util.color.RainbowColor;
 import net.minecraft.text.Text;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.MathHelper;
@@ -39,8 +40,16 @@ public class SpreadMode extends LaserMode {
     private int laserMultiplier;
     private UiManageable<SpreadMode> ui;
 
+    private static List<LaserColor> createRainbowColors(int amount) {
+        var colors = new LaserColor[amount];
+        for (int i = 0; i < amount; i++) {
+            colors[i] = new RainbowColor((float) i / amount, 5f);
+        }
+        return List.of(colors);
+    }
+
     public SpreadMode() {
-        this(List.of(), 45 * MathHelper.RADIANS_PER_DEGREE, 10 * MathHelper.RADIANS_PER_DEGREE, 1f, 1);
+        this(createRainbowColors(15), 45 * MathHelper.RADIANS_PER_DEGREE, 10 * MathHelper.RADIANS_PER_DEGREE, 1f, 1);
     }
 
     public SpreadMode(List<LaserColor> colors, float spreadAngle, float tiltAngle, float tiltSpeed, int laserMultiplier) {

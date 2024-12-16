@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        " R ",
+        "SSS"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:chain"
+        },
+        "R": {
+            "item": "minecraft:redstone"
+        },
+        "S": {
+            "item": "minecraft:stone"
+        }
+    },
+    "result": {
+        "id": "disco_lasers:laser_controller",
+        "count": 1
+    }
+}

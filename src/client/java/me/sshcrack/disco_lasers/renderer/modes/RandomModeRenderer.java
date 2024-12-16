@@ -25,7 +25,13 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
         var colors = mode.getColors();
 
         var color = colors.get(random.nextInt(colors.size()));
-        return new LaserInfo(color, random.nextFloat() * maxAngle, random.nextFloat() * maxAngle, random.nextFloat() * maxAngle, worldTime, random.nextFloat());
+        return new LaserInfo(
+                color,
+                random.nextFloat() * maxAngle - maxAngle / 2f,
+                random.nextFloat() * maxAngle - maxAngle / 2f,
+                random.nextFloat() * maxAngle - maxAngle / 2f,
+                worldTime, random.nextFloat()
+        );
     }
 
     @Override
@@ -38,9 +44,6 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
 
         var maxAngle = mode.getMaxAngle();
         var maxAge = mode.getLaserAge();
-        matrixStack.multiply(RotationAxis.NEGATIVE_X.rotation((mode.getMaxAngle() / 2f)));
-        matrixStack.multiply(RotationAxis.NEGATIVE_Y.rotation((mode.getMaxAngle() / 2f)));
-        matrixStack.multiply(RotationAxis.NEGATIVE_Z.rotation(-(mode.getMaxAngle() / 2f)));
         for (int i = 0; i < amount; i++) {
             if (lasers[i] == null)
                 lasers[i] = generateRandom(mode, worldTime, maxAngle);
@@ -55,7 +58,7 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
             laser.color.tick(worldTime, tickDelta);
             matrixStack.push();
 
-            var deltaAge = time / maxAge;
+            var deltaAge = 0;//time / maxAge;
             var deltaX = laser.rotX * deltaAge + laser.rotX / 2;
             var deltaY = laser.rotY * deltaAge * laser.deltaOffset + laser.rotY / 2;
             var deltaZ = laser.rotZ * deltaAge * -laser.deltaOffset + laser.rotZ / 2;

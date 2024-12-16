@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i",
+    "R",
+    "S"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "S": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "id": "disco_lasers:laser_configurator",
+    "count": 1
+  }
+}

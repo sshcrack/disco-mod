@@ -25,9 +25,9 @@ public class SingleLaserScreenHandler extends ScreenHandler {
     );
 
     private final ScreenHandlerContext context;
-    private final List<Consumer<LaserMode>> initialModeListeners = new ArrayList<>();
+    private final List<Consumer<SetInitialModes>> initialModeListeners = new ArrayList<>();
 
-    private LaserMode laserMode;
+    private List<LaserMode> laserModes;
 
     public SingleLaserScreenHandler(int syncId, PlayerInventory inventory) {
         this(syncId, inventory, ScreenHandlerContext.EMPTY);
@@ -48,23 +48,36 @@ public class SingleLaserScreenHandler extends ScreenHandler {
 
         this.endecBuilder().register(LASER_MODE_ENDEC, LaserMode.class);
         this.addServerboundMessage(SetBlockEntityLaserMode.class, this::handleSetBlockEntity);
-        this.addClientboundMessage(SetInitialMode.class, msg -> {
-            laserMode = msg.mode;
-            initialModeListeners.forEach(listener -> listener.accept(msg.mode));
+        this.addServerboundMessage(SetBlockEntityLaserIndex.class, this::handleSetBlockEntityIndex);
+        this.addClientboundMessage(SetInitialModes.class, msg -> {
+            laserModes = msg.modes;
+            initialModeListeners.forEach(listener -> listener.accept(msg));
+        });
+    }
+
+    private void handleSetBlockEntityIndex(SetBlockEntityLaserIndex setBlockEntityLaserIndex) {
+        var blockEntity = getBlockEntity();
+        if (blockEntity == null)
+            return;
+
+        blockEntity.setCurrentIndex(setBlockEntityLaserIndex.currentIndex);
+        this.context.run((world, pos) -> {
+            ((ServerWorld) world).getChunkManager().markForUpdate(pos);
+            world.markDirty(pos);
         });
     }
 
     public void sendInitialPacket() {
         var blockEntity = getBlockEntity();
         if (blockEntity != null)
-            sendMessage(new SetInitialMode(blockEntity.getLaserMode()));
+            sendMessage(new SetInitialModes(blockEntity.getLaserModes(),blockEntity.getCurrentIndex()));
     }
 
-    public void registerInitialModeListener(Consumer<LaserMode> listener, boolean notifyIfAlreadySet) {
+    public void registerInitialModeListener(Consumer<SetInitialModes> listener, boolean notifyIfAlreadySet) {
         initialModeListeners.add(listener);
 
-        if (notifyIfAlreadySet && laserMode != null)
-            listener.accept(laserMode);
+        if (notifyIfAlreadySet && laserModes != null)
+            listener.accept(new SetInitialModes(laserModes, getBlockEntity().getCurrentIndex()));
     }
 
     @Override
@@ -80,7 +93,7 @@ public class SingleLaserScreenHandler extends ScreenHandler {
     /**
      * Packet to be sent when the client opens the screen
      */
-    public record SetInitialMode(LaserMode mode) {
+    public record SetInitialModes(List<LaserMode> modes, int index) {
 
     }
 
@@ -89,16 +102,20 @@ public class SingleLaserScreenHandler extends ScreenHandler {
         if (blockEntity == null)
             return;
 
-        blockEntity.setLaserMode(msg.mode);
+        blockEntity.setLaserModes(msg.mode);
         this.context.run((world, pos) -> {
             ((ServerWorld) world).getChunkManager().markForUpdate(pos);
+            world.markDirty(pos);
         });
     }
 
     /**
      * Packet to be sent when the client changes the mode
      */
-    public record SetBlockEntityLaserMode(LaserMode mode) {
+    public record SetBlockEntityLaserMode(List<LaserMode> mode) {
 
+    }
+
+    public record SetBlockEntityLaserIndex(int currentIndex) {
     }
 }

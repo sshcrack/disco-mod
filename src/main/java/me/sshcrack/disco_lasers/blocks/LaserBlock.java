@@ -2,7 +2,11 @@ package me.sshcrack.disco_lasers.blocks;
 
 import com.mojang.serialization.MapCodec;
 import me.sshcrack.disco_lasers.registries.ModBlockEntityTypes;
-import net.minecraft.block.*;
+import me.sshcrack.disco_lasers.registries.ModItems;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -46,6 +50,9 @@ public class LaserBlock extends BlockWithEntity {
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (player.getMainHandStack().isOf(ModItems.LASER_CONTROLLER_ITEM) || player.getOffHandStack().isOf(ModItems.LASER_CONTROLLER_ITEM))
+            return ActionResult.PASS;
+
         if (!world.isClient) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 

@@ -13,8 +13,10 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
+import org.jetbrains.annotations.Nullable;
 
 public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockEntity> {
+    @Nullable
     private LaserModeRenderer<?> renderer;
     private final BlockEntityRendererFactory.Context ctx;
 
@@ -24,10 +26,6 @@ public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockE
 
 
     public void render(LaserBlockEntity blockEntity, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-        var mode = blockEntity.getLaserMode();
-        if (renderer == null || !renderer.underlyingModeClass.isInstance(mode))
-            renderer = LaserModeRendererRegistry.createRenderer(mode);
-
         BlockState blockState = blockEntity.getCachedState();
 
         int rotationProp = blockState.get(LaserBlock.ROTATION);
@@ -52,10 +50,15 @@ public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockE
         matrixStack.translate(0.5, 0.25, 1.25f / 16f);
         matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
 
+        var mode = blockEntity.getCurrentLaserMode();
+        if (mode != null) {
+            if (renderer == null || !renderer.underlyingModeClass.isInstance(mode))
+                renderer = LaserModeRendererRegistry.createRenderer(mode);
 
-        if (!blockEntity.getLaserMode().getColors().isEmpty()) {
-            //noinspection unchecked
-            ((LaserModeRenderer<LaserMode>) renderer).render(mode, blockEntity, tickDelta, matrixStack, vertexConsumerProvider, light, overlay);
+            if (!mode.getColors().isEmpty()) {
+                //noinspection unchecked
+                ((LaserModeRenderer<LaserMode>) renderer).render(mode, blockEntity, tickDelta, matrixStack, vertexConsumerProvider, light, overlay);
+            }
         }
 
 

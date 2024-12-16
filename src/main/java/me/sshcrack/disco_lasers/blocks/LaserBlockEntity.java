@@ -3,9 +3,8 @@ package me.sshcrack.disco_lasers.blocks;
 import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
 import me.sshcrack.disco_lasers.registries.ModBlockEntityTypes;
+import me.sshcrack.disco_lasers.registries.ModNetworking;
 import me.sshcrack.disco_lasers.screen.SingleLaserScreenHandler;
-import me.sshcrack.disco_lasers.util.color.LaserColor;
-import me.sshcrack.disco_lasers.util.color.RainbowColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,35 +18,24 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerFactory {
-    private static List<LaserColor> createRainbowColors(int amount) {
-        var colors = new LaserColor[amount];
-        for (int i = 0; i < amount; i++) {
-            colors[i] = new RainbowColor((float) i / amount, 5f);
-        }
-        return List.of(colors);
-    }
+    protected int currentIndex;
+    protected List<LaserMode> modes;
+
 
     public static LaserMode createFallback() {
         //return new RandomMode(45 * MathHelper.RADIANS_PER_DEGREE, 10, 2f, 50, createRainbowColors(50));
-        return new SpreadMode(createRainbowColors(100), 180 * MathHelper.RADIANS_PER_DEGREE, 40 * MathHelper.RADIANS_PER_DEGREE, 1, 1);
+        return new SpreadMode();
     }
-
-    protected LaserMode mode;
 
     public LaserBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntityTypes.LASER_BLOCK_ENTITY_TYPE, pos, state);
-    }
-
-    @Override
-    public void removeFromCopiedStackNbt(NbtCompound nbt) {
-        nbt.remove("laser_mode");
     }
 
 
@@ -55,15 +43,45 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
 
     }
 
-    public LaserMode getLaserMode() {
-        if (mode == null)
-            mode = createFallback();
+    @Nullable
+    public LaserMode getCurrentLaserMode() {
+        if (modes == null || currentIndex < 0 || currentIndex >= modes.size()) {
+            return null;
+        }
 
-        return mode;
+        return modes.get(currentIndex);
     }
 
-    public void setLaserMode(LaserMode mode) {
-        this.mode = mode;
+    public List<LaserMode> getLaserModes() {
+        return modes;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int index) {
+        if (world != null && !world.isClient) {
+            this.markDirty();
+            ModNetworking.LASER_CONTROL_CHANNEL.serverHandle(this).send(new ModNetworking.LaserControlPacket(pos, index));
+        }
+
+        this.currentIndex = index;
+    }
+
+    public void setLaserModes(List<LaserMode> modes) {
+        this.modes = modes;
+    }
+
+    public void removeLaserMode(LaserMode mode) {
+        this.modes.remove(mode);
+        if (currentIndex >= modes.size()) {
+            currentIndex = modes.size() - 1;
+        }
+    }
+
+    public void addLaserMode(LaserMode mode) {
+        this.modes.add(mode);
     }
 
     @Override
@@ -80,15 +98,20 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         if (nbt.contains("laser_mode")) {
-            mode = LaserMode.LASER_CODEC.decode(NbtOps.INSTANCE, nbt.get("laser_mode")).getOrThrow().getFirst();
+            modes = LaserMode.LASER_CODEC.listOf().decode(NbtOps.INSTANCE, nbt.get("laser_mode")).getOrThrow().getFirst();
         }
+
+        if (nbt.contains("laser_index"))
+            currentIndex = nbt.getInt("laser_index");
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        if (mode != null) {
-            nbt.put("laser_mode", LaserMode.LASER_CODEC.encodeStart(NbtOps.INSTANCE, mode).getOrThrow());
-        }
+        if (modes == null)
+            modes = new ArrayList<>(List.of(createFallback()));
+
+        nbt.put("laser_mode", LaserMode.LASER_CODEC.listOf().encodeStart(NbtOps.INSTANCE, modes).getOrThrow());
+        nbt.putInt("laser_index", currentIndex);
     }
 
 

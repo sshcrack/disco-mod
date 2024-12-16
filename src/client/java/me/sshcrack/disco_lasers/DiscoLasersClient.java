@@ -1,9 +1,11 @@
 package me.sshcrack.disco_lasers;
 
+import me.sshcrack.disco_lasers.blocks.LaserBlockEntity;
 import me.sshcrack.disco_lasers.blocks.modes.RandomMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
 import me.sshcrack.disco_lasers.registries.ModBlockEntityTypes;
 import me.sshcrack.disco_lasers.registries.ModHandledScreens;
+import me.sshcrack.disco_lasers.registries.ModNetworking;
 import me.sshcrack.disco_lasers.renderer.LaserBlockEntityRenderer;
 import me.sshcrack.disco_lasers.renderer.modes.RandomModeRenderer;
 import me.sshcrack.disco_lasers.renderer.modes.SpreadModeRenderer;
@@ -26,5 +28,12 @@ public class DiscoLasersClient implements ClientModInitializer {
         ManageableRegistry.initialize();
 
         HandledScreens.register(ModHandledScreens.SINGLE_LASER_HANDLE_TYPE, SingleLaserScreen::new);
+
+        ModNetworking.LASER_CONTROL_CHANNEL.registerClientbound(ModNetworking.LaserControlPacket.class, (message, access) -> {
+            var entity = access.netHandler().getWorld().getBlockEntity(message.pos());
+            if (entity instanceof LaserBlockEntity laser) {
+                laser.setCurrentIndex(message.index());
+            }
+        });
     }
 }

@@ -3,153 +3,176 @@
     <components>
         <flow-layout direction="vertical">
             <children> <!---->
-                <flow-layout direction="vertical"> <!---->
-                    <children>
-                        <scroll direction="vertical">
-                            <flow-layout direction="vertical">
-                                <children>
-                                    <flow-layout direction="horizontal">
-                                        <children>
-                                            <label>
-                                                <text>Laser Configuration</text>
-                                            </label>
-                                            <spacer>
-                                                <sizing>
-                                                    <vertical method="fill">20</vertical>
-                                                </sizing>
-                                            </spacer>
-                                            <button id="import">
-                                                <text>Import</text>
-                                            </button>
-                                            <button id="export">
-                                                <text>Export</text>
-                                            </button>
-                                        </children>
-                                        <gap>5</gap>
-                                        <sizing>
-                                            <horizontal method="fill">100</horizontal>
-                                        </sizing>
-                                        <vertical-alignment>center</vertical-alignment>
-                                    </flow-layout>
-                                    <flow-layout direction="vertical">
-                                        <children>
-                                            <flow-layout direction="horizontal">
-                                                <children>
-                                                    <label>
-                                                        <text>Mode:</text>
-                                                    </label>
-                                                    <flow-layout direction="horizontal" id="mode-select">
-                                                        <children>
-                                                        </children>
-                                                        <gap>5</gap>
-                                                    </flow-layout>
-                                                </children>
+                <draggable>
+                    <flow-layout direction="vertical"> <!---->
+                        <children>
+                            <scroll direction="vertical">
+                                <flow-layout direction="vertical">
+                                    <children>
+                                        <flow-layout direction="horizontal">
+                                            <children>
+                                                <label>
+                                                    <text>Laser Configuration</text>
+                                                </label>
+                                                <spacer>
+                                                    <sizing>
+                                                        <vertical method="fill">20</vertical>
+                                                    </sizing>
+                                                </spacer>
+                                                <button id="import">
+                                                    <text>Import</text>
+                                                </button>
+                                                <button id="export">
+                                                    <text>Export</text>
+                                                </button>
+                                            </children>
+                                            <gap>5</gap>
+                                            <sizing>
+                                                <horizontal method="fill">100</horizontal>
+                                            </sizing>
+                                            <vertical-alignment>center</vertical-alignment>
+                                        </flow-layout>
+                                        <flow-layout direction="vertical">
+                                            <children>
+                                                <flow-layout direction="horizontal">
+                                                    <children>
+                                                        <label>
+                                                            <text>Select Mode:</text>
+                                                        </label>
+                                                        <scroll direction="horizontal">
+                                                            <flow-layout direction="horizontal" id="preset-mode-select">
+                                                                <children>
+                                                                </children>
+                                                                <gap>5</gap>
 
-                                                <horizontal-alignment>center</horizontal-alignment>
-                                                <vertical-alignment>center</vertical-alignment>
-                                                <gap>10</gap>
-                                            </flow-layout>
+                                                                <padding>
+                                                                    <vertical>5</vertical>
+                                                                </padding>
+                                                            </flow-layout>
+                                                            <sizing>
+                                                                <horizontal method="fixed">180</horizontal>
+                                                            </sizing>
+                                                        </scroll>
+                                                    </children>
+                                                    <horizontal-alignment>center</horizontal-alignment>
+                                                    <vertical-alignment>center</vertical-alignment>
+                                                    <gap>10</gap>
+                                                </flow-layout>
+                                                <flow-layout direction="horizontal">
+                                                    <children>
+                                                        <label>
+                                                            <text>Mode:</text>
+                                                        </label>
+                                                        <flow-layout direction="horizontal" id="mode-select">
+                                                            <children>
+                                                            </children>
+                                                            <gap>5</gap>
+                                                        </flow-layout>
+                                                    </children>
 
-                                            <flow-layout direction="horizontal" id="mode-settings">
-                                                <!--suppress CheckTagEmptyBody Used programmatically-->
-                                                <children></children>
-                                            </flow-layout>
+                                                    <horizontal-alignment>center</horizontal-alignment>
+                                                    <vertical-alignment>center</vertical-alignment>
+                                                    <gap>10</gap>
+                                                </flow-layout>
 
-                                            <flow-layout direction="horizontal">
-                                                <children>
-                                                    <flow-layout direction="horizontal">
-                                                        <children>
-                                                            <label>
-                                                                <text>Current Colors:</text>
-                                                            </label>
-                                                            <label id="current-colors">
-                                                                <text>10</text>
-                                                            </label>
-                                                        </children>
-                                                        <gap>5</gap>
-                                                        <sizing>
-                                                        </sizing>
-                                                    </flow-layout>
-                                                    <button id="clear-colors">
-                                                        <text>Clear</text>
-                                                        <renderer>
-                                                            <flat color="dark-red" hovered-color="red"
-                                                                  disabled-color="gray"/>
-                                                        </renderer>
-                                                    </button>
-                                                </children>
-                                                <gap>10</gap>
-                                                <vertical-alignment>center</vertical-alignment>
-                                            </flow-layout>
-                                        </children>
-                                        <gap>10</gap>
-                                    </flow-layout>
-                                    <flow-layout direction="horizontal">
-                                        <children>
-                                            <label>
-                                                <text>Color:</text>
-                                            </label>
-                                            <flow-layout direction="horizontal" id="color-select">
-                                                <children>
-                                                </children>
-                                                <gap>5</gap>
-                                            </flow-layout>
-                                        </children>
+                                                <flow-layout direction="horizontal" id="mode-settings">
+                                                    <!--suppress CheckTagEmptyBody Used programmatically-->
+                                                    <children></children>
+                                                </flow-layout>
 
-                                        <horizontal-alignment>center</horizontal-alignment>
-                                        <vertical-alignment>center</vertical-alignment>
-                                        <gap>10</gap>
-                                    </flow-layout>
+                                                <flow-layout direction="horizontal">
+                                                    <children>
+                                                        <flow-layout direction="horizontal">
+                                                            <children>
+                                                                <label>
+                                                                    <text>Current Colors:</text>
+                                                                </label>
+                                                                <label id="current-colors">
+                                                                    <text>10</text>
+                                                                </label>
+                                                            </children>
+                                                            <gap>5</gap>
+                                                            <sizing>
+                                                            </sizing>
+                                                        </flow-layout>
+                                                        <button id="clear-colors">
+                                                            <text>Clear</text>
+                                                            <renderer>
+                                                                <flat color="dark-red" hovered-color="red"
+                                                                      disabled-color="gray"/>
+                                                            </renderer>
+                                                        </button>
+                                                    </children>
+                                                    <gap>10</gap>
+                                                    <vertical-alignment>center</vertical-alignment>
+                                                </flow-layout>
+                                            </children>
+                                            <gap>10</gap>
+                                        </flow-layout>
+                                        <flow-layout direction="horizontal">
+                                            <children>
+                                                <label>
+                                                    <text>Color:</text>
+                                                </label>
+                                                <flow-layout direction="horizontal" id="color-select">
+                                                    <children>
+                                                    </children>
+                                                    <gap>5</gap>
+                                                </flow-layout>
+                                            </children>
 
-                                    <flow-layout direction="horizontal" id="color-settings">
-                                        <!--suppress CheckTagEmptyBody Used programmatically-->
-                                        <children></children>
-                                    </flow-layout>
+                                            <horizontal-alignment>center</horizontal-alignment>
+                                            <vertical-alignment>center</vertical-alignment>
+                                            <gap>10</gap>
+                                        </flow-layout>
 
-                                    <button id="add-color">
-                                        <text>Add Color</text>
-                                    </button>
-                                    <button id="add-color-5x">
-                                        <text>5x Add Color</text>
-                                    </button>
+                                        <flow-layout direction="horizontal" id="color-settings">
+                                            <!--suppress CheckTagEmptyBody Used programmatically-->
+                                            <children></children>
+                                        </flow-layout>
 
-                                    <spacer>
-                                        <sizing>
-                                            <vertical method="fixed">30</vertical>
-                                        </sizing>
-                                    </spacer>
-                                    <button id="update">
-                                        <text>Update</text>
-                                    </button>
-                                </children>
+                                        <button id="add-color">
+                                            <text>Add Color</text>
+                                        </button>
+                                        <button id="add-color-5x">
+                                            <text>5x Add Color</text>
+                                        </button>
+
+                                        <spacer>
+                                            <sizing>
+                                                <vertical method="fixed">30</vertical>
+                                            </sizing>
+                                        </spacer>
+                                    </children>
+                                    <sizing>
+                                        <vertical method="content">100</vertical>
+                                    </sizing>
+
+                                    <gap>10</gap>
+                                </flow-layout>
                                 <sizing>
-                                    <vertical method="content">100</vertical>
+                                    <vertical method="fill">100</vertical>
                                 </sizing>
-
-                                <gap>10</gap>
-                            </flow-layout>
-                            <sizing>
-                                <vertical method="fill">100</vertical>
-                            </sizing>
-                            <padding>
-                                <all>10</all>
-                            </padding>
-                        </scroll>
-                    </children>
+                                <padding>
+                                    <all>10</all>
+                                </padding>
+                            </scroll>
+                        </children>
 
 
-                    <!---->
+                        <!---->
 
-                    <surface>
-                        <blur quality="20" size="20"/>
-                        <outline>green</outline>
-                    </surface>
-                    <sizing>
-                        <vertical method="fill">60</vertical>
-                        <horizontal method="fill">60</horizontal>
-                    </sizing>
+                        <surface>
+                            <blur quality="20" size="20"/>
+                            <outline>green</outline>
+                        </surface>
+                        <sizing>
+                            <vertical method="fill">60</vertical>
+                            <horizontal method="fill">60</horizontal>
+                        </sizing>
 
-                </flow-layout>
+                    </flow-layout>
+                </draggable>
             </children>
 
             <vertical-alignment>center</vertical-alignment>
@@ -229,7 +252,7 @@
                             <label>
                                 <text>Max Age</text>
                             </label>
-                            <discrete-slider min="0" max="10" id="mode.random.laser-age">
+                            <discrete-slider min="0" max="400" id="mode.random.laser-age">
                                 <decimal-places>2</decimal-places>
                                 <sizing>
                                     <horizontal method="fixed">100</horizontal>

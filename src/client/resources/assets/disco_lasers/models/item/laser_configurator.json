@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "disco_lasers:item/laser_configurator"
+  }
+}

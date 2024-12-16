@@ -13,12 +13,14 @@ public class DiscoLasers implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ModDataComponentTypes.initialize();
         ModLaserColor.initialize();
         ModLaserModes.initialize();
         ModHandledScreens.initialize();
 
         ModBlockEntityTypes.initialize();
         ModBlocks.initialize();
+        ModItems.initialize();
     }
 
     public static Identifier ref(String path) {

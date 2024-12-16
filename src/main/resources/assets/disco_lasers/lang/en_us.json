@@ -3,5 +3,13 @@
   "block.disco_lasers.laser_block.modes.random": "Random",
   "block.disco_lasers.laser_block": "Laser Block",
   "color.disco_lasers.static": "Static",
-  "color.disco_lasers.rainbow": "Rainbow"
+  "color.disco_lasers.rainbow": "Rainbow",
+  "item.disco_lasers.laser_controller.tooltip_1": "Connected Lasers: %s",
+  "item.disco_lasers.laser_controller": "Laser Controller",
+  "item.disco_lasers.laser_configurator": "Laser Configurator",
+  "item.disco_lasers.laser_configurator.copied": "Settings copied!",
+  "item.disco_lasers.laser_configurator.pasted": "Settings pasted!",
+  "item.disco_lasers.laser_controller.added": "Laser at %s added.",
+  "item.disco_lasers.laser_controller.clear": "Cleared connected lasers.",
+  "item.disco_lasers.laser_controller.tooltip": "Controls connected lasers."
 }
