@@ -49,18 +49,31 @@ public class SingleLaserScreenHandler extends ScreenHandler {
         this.endecBuilder().register(LASER_MODE_ENDEC, LaserMode.class);
         this.addServerboundMessage(SetBlockEntityLaserMode.class, this::handleSetBlockEntity);
         this.addServerboundMessage(SetBlockEntityLaserIndex.class, this::handleSetBlockEntityIndex);
+        this.addServerboundMessage(SetBlockEntityLaserDistance.class, this::handleSetBlockEntityDistance);
         this.addClientboundMessage(SetInitialModes.class, msg -> {
             laserModes = msg.modes;
             initialModeListeners.forEach(listener -> listener.accept(msg));
         });
     }
 
-    private void handleSetBlockEntityIndex(SetBlockEntityLaserIndex setBlockEntityLaserIndex) {
+    private void handleSetBlockEntityDistance(SetBlockEntityLaserDistance msg) {
         var blockEntity = getBlockEntity();
         if (blockEntity == null)
             return;
 
-        blockEntity.setCurrentIndex(setBlockEntityLaserIndex.currentIndex);
+        blockEntity.setDistance(msg.distance());
+        this.context.run((world, pos) -> {
+            ((ServerWorld) world).getChunkManager().markForUpdate(pos);
+            world.markDirty(pos);
+        });
+    }
+
+    private void handleSetBlockEntityIndex(SetBlockEntityLaserIndex msg) {
+        var blockEntity = getBlockEntity();
+        if (blockEntity == null)
+            return;
+
+        blockEntity.setCurrentIndex(msg.currentIndex);
         this.context.run((world, pos) -> {
             ((ServerWorld) world).getChunkManager().markForUpdate(pos);
             world.markDirty(pos);
@@ -70,14 +83,14 @@ public class SingleLaserScreenHandler extends ScreenHandler {
     public void sendInitialPacket() {
         var blockEntity = getBlockEntity();
         if (blockEntity != null)
-            sendMessage(new SetInitialModes(blockEntity.getLaserModes(),blockEntity.getCurrentIndex()));
+            sendMessage(new SetInitialModes(blockEntity.getLaserModes(), blockEntity.getCurrentIndex(), blockEntity.getDistance()));
     }
 
     public void registerInitialModeListener(Consumer<SetInitialModes> listener, boolean notifyIfAlreadySet) {
         initialModeListeners.add(listener);
 
         if (notifyIfAlreadySet && laserModes != null)
-            listener.accept(new SetInitialModes(laserModes, getBlockEntity().getCurrentIndex()));
+            listener.accept(new SetInitialModes(laserModes, getBlockEntity().getCurrentIndex(), getBlockEntity().getDistance()));
     }
 
     @Override
@@ -93,7 +106,7 @@ public class SingleLaserScreenHandler extends ScreenHandler {
     /**
      * Packet to be sent when the client opens the screen
      */
-    public record SetInitialModes(List<LaserMode> modes, int index) {
+    public record SetInitialModes(List<LaserMode> modes, int index, float distance) {
 
     }
 
@@ -117,5 +130,8 @@ public class SingleLaserScreenHandler extends ScreenHandler {
     }
 
     public record SetBlockEntityLaserIndex(int currentIndex) {
+    }
+
+    public record SetBlockEntityLaserDistance(float distance) {
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
@@ -27,8 +28,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LaserBlock extends BlockWithEntity {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(4, 0.0, 1, 12.0, 6.0, 16.0);
+    public static List<Item> IGNORED_ITEMS = List.of(ModItems.LASER_CONTROLLER_ITEM, ModItems.LASER_CONFIGURATOR_ITEM);
 
     public static final int MAX_ROTATION_INDEX = RotationPropertyHelper.getMax();
     private static final int MAX_ROTATIONS = MAX_ROTATION_INDEX + 1;
@@ -50,9 +55,11 @@ public class LaserBlock extends BlockWithEntity {
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (player.getMainHandStack().isOf(ModItems.LASER_CONTROLLER_ITEM) || player.getOffHandStack().isOf(ModItems.LASER_CONTROLLER_ITEM))
-            return ActionResult.PASS;
-
+        for (Item ignoredItem : IGNORED_ITEMS) {
+            if (player.getMainHandStack().isOf(ignoredItem) || player.getOffHandStack().isOf(ignoredItem))
+                return ActionResult.PASS;
+        }
+        
         if (!world.isClient) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 

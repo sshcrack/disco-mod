@@ -11,6 +11,10 @@ public class ModNetworking {
 
     }
 
+    public record LaserDistanceSet(BlockPos pos, float distance) {
+
+    }
+
     public static void initialize() {
     }
 }

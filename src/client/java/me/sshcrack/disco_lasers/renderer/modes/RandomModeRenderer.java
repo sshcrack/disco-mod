@@ -38,6 +38,7 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
     public void render(RandomMode mode, LaserBlockEntity blockEntity, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
         long worldTime = blockEntity.getWorld().getTime();
         int amount = mode.getLaserAmount();
+        var maxY = blockEntity.getDistance();
 
         if (lasers.length != amount)
             lasers = new LaserInfo[amount];
@@ -49,7 +50,7 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
                 lasers[i] = generateRandom(mode, worldTime, maxAngle);
 
             var laser = lasers[i];
-            var time = worldTime - laser.creationTime;
+            var time = (worldTime + tickDelta) - laser.creationTime;
             if (time > maxAge) {
                 lasers[i] = generateRandom(mode, worldTime, maxAngle);
                 laser = lasers[i];
@@ -63,7 +64,7 @@ public class RandomModeRenderer extends LaserModeRenderer<RandomMode> {
             var deltaY = laser.rotY * deltaAge * laser.deltaOffset + laser.rotY / 2;
             var deltaZ = laser.rotZ * deltaAge * -laser.deltaOffset + laser.rotZ / 2;
             matrixStack.multiply(new Quaternionf().rotateXYZ(deltaX, deltaY, deltaZ));
-            renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, 0, 10, laser.color.getARGB());
+            renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, 0, maxY, laser.color.getARGB());
             matrixStack.pop();
         }
     }

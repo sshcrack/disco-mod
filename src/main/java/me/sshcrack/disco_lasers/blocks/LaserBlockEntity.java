@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerFactory {
+    public Object renderer;
+
     protected int currentIndex;
+    protected float distance;
     protected List<LaserMode> modes;
 
 
@@ -50,6 +53,19 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
         }
 
         return modes.get(currentIndex);
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        if (world != null && !world.isClient) {
+            this.markDirty();
+            ModNetworking.LASER_CONTROL_CHANNEL.serverHandle(this).send(new ModNetworking.LaserDistanceSet(pos, distance));
+        }
+
+        this.distance = distance;
     }
 
     public List<LaserMode> getLaserModes() {
@@ -101,6 +117,12 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
             modes = LaserMode.LASER_CODEC.listOf().decode(NbtOps.INSTANCE, nbt.get("laser_mode")).getOrThrow().getFirst();
         }
 
+        if (nbt.contains("laser_distance")) {
+            distance = nbt.getFloat("laser_distance");
+        } else {
+            distance = 10;
+        }
+
         if (nbt.contains("laser_index"))
             currentIndex = nbt.getInt("laser_index");
     }
@@ -109,9 +131,12 @@ public class LaserBlockEntity extends BlockEntity implements NamedScreenHandlerF
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         if (modes == null)
             modes = new ArrayList<>(List.of(createFallback()));
+        if(distance == 0)
+            distance = 10;
 
         nbt.put("laser_mode", LaserMode.LASER_CODEC.listOf().encodeStart(NbtOps.INSTANCE, modes).getOrThrow());
         nbt.putInt("laser_index", currentIndex);
+        nbt.putFloat("laser_distance", distance);
     }
 
 

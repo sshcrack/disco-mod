@@ -6,6 +6,7 @@ import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.component.DiscreteSliderComponent;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
@@ -41,8 +42,10 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
     @Nullable
     private LaserMode currentMode;
     private int currentIndex;
+    private float distance;
     @Nullable
     private List<LaserMode> modesInBlockEntity;
+    private boolean distanceDirty = false;
 
     public SingleLaserScreen(SingleLaserScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(DiscoLasers.ref("single_laser")));
@@ -187,6 +190,11 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
         this.handler.sendMessage(new SingleLaserScreenHandler.SetBlockEntityLaserIndex(currentIndex));
     }
 
+
+    public void sendDistanceUpdate() {
+        this.handler.sendMessage(new SingleLaserScreenHandler.SetBlockEntityLaserDistance(distance));
+    }
+
     public void updateColorCount() {
         if (currentMode == null) {
             DiscoLasers.LOGGER.error("Current mode is null for update color count");
@@ -223,9 +231,18 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
         handler.registerInitialModeListener(msg -> {
             modesInBlockEntity = new ArrayList<>(msg.modes());
             currentIndex = msg.index();
+            distance = msg.distance();
+
             updatePresetModeSelect();
 
             this.uiAdapter.rootComponent.childById(LabelComponent.class, "not-synced").remove();
+            var distanceSlider = this.uiAdapter.rootComponent.childById(DiscreteSliderComponent.class, "laser-distance");
+            distanceSlider.setFromDiscreteValue(distance);
+
+            distanceSlider.onChanged().subscribe(e -> {
+                distance = (float) e;
+                distanceDirty = true;
+            });
         }, true);
 
 
@@ -317,9 +334,10 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        var isOutside = this.isClickOutsideBounds(mouseX, mouseY, x, y, button);
-        if (!isOutside) {
-            sendUpdateModes();
+        sendUpdateModes();
+        if(distanceDirty) {
+            sendDistanceUpdate();
+            distanceDirty = false;
         }
 
         return super.mouseReleased(mouseX, mouseY, button);

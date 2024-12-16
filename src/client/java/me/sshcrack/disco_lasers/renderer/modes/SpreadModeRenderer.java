@@ -12,6 +12,7 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
     @Override
     public void render(SpreadMode mode, LaserBlockEntity blockEntity, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
         long worldTime = blockEntity.getWorld().getTime();
+        var maxY = blockEntity.getDistance();
         int k = 0;
 
 
@@ -34,7 +35,7 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
 
             matrixStack.multiply(spacing);
             matrixStack.multiply(RotationAxis.NEGATIVE_X.rotation(radDelta * mode.getTiltAngle()));
-            renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, k, 10, laserColor.getARGB());
+            renderDefaultBeam(matrixStack, vertexConsumerProvider, tickDelta, worldTime, k, maxY, laserColor.getARGB());
             matrixStack.pop();
         }
 

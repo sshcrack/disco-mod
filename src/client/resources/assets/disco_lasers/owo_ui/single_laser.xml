@@ -32,6 +32,22 @@
                                             </sizing>
                                             <vertical-alignment>center</vertical-alignment>
                                         </flow-layout>
+                                        <flow-layout direction="horizontal">
+                                            <children>
+                                                <label>
+                                                    <text>Laser Distance</text>
+                                                </label>
+                                                <discrete-slider min="0.1" max="20" id="laser-distance">
+                                                    <decimal-places>1</decimal-places>
+                                                    <sizing>
+                                                        <horizontal method="fixed">100</horizontal>
+                                                        <vertical method="fixed">20</vertical>
+                                                    </sizing>
+                                                </discrete-slider>
+                                            </children>
+                                            <vertical-alignment>center</vertical-alignment>
+                                            <gap>10</gap>
+                                        </flow-layout>
                                         <flow-layout direction="vertical">
                                             <children>
                                                 <flow-layout direction="horizontal">
@@ -252,7 +268,7 @@
                             <label>
                                 <text>Max Age</text>
                             </label>
-                            <discrete-slider min="0" max="400" id="mode.random.laser-age">
+                            <discrete-slider min="0" max="20" id="mode.random.laser-age">
                                 <decimal-places>2</decimal-places>
                                 <sizing>
                                     <horizontal method="fixed">100</horizontal>
@@ -269,11 +285,12 @@
                             <label>
                                 <text>Speed</text>
                             </label>
-                            <discrete-slider id="mode.random.laser-speed" min="0" max="1000">
+                            <discrete-slider id="mode.random.laser-speed" min="0" max="5">
                                 <sizing>
                                     <horizontal method="fixed">100</horizontal>
                                     <vertical method="fixed">20</vertical>
                                 </sizing>
+                                <decimal-places>2</decimal-places>
                                 <tooltip-text>Speed</tooltip-text>
                             </discrete-slider>
                         </children>
@@ -373,6 +390,11 @@
                     </flow-layout>
                 </children>
                 <gap>10</gap>
+            </flow-layout>
+        </template>
+        <template name="mode.off">
+            <flow-layout direction="horizontal">
+                <children></children>
             </flow-layout>
         </template>
     </templates>

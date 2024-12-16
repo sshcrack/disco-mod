@@ -1,6 +1,7 @@
 package me.sshcrack.disco_lasers.items;
 
 import me.sshcrack.disco_lasers.blocks.LaserBlockEntity;
+import me.sshcrack.disco_lasers.blocks.modes.LaserMode;
 import me.sshcrack.disco_lasers.registries.ModDataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -30,14 +31,15 @@ public class LaserConfiguratorItem extends Item {
 
         if (context.getPlayer().isSneaking()) {
             context.getPlayer().sendMessage(Text.translatable("item.disco_lasers.laser_configurator.copied"), true);
-            stack.set(ModDataComponentTypes.LASER_DATA, new ModDataComponentTypes.LaserData(laser.getLaserModes(), laser.getCurrentIndex()));
+            stack.set(ModDataComponentTypes.LASER_DATA, new ModDataComponentTypes.LaserData(laser.getLaserModes(), laser.getCurrentIndex(), laser.getDistance()));
         } else {
             var data = stack.get(ModDataComponentTypes.LASER_DATA);
             if (data == null)
                 return ActionResult.FAIL;
 
-            laser.setLaserModes(data.mode());
+            laser.setLaserModes(data.mode().stream().map(LaserMode::expensiveClone).toList());
             laser.setCurrentIndex(data.index());
+            laser.setDistance(data.distance());
             context.getWorld().markDirty(context.getBlockPos());
             ((ServerWorld) context.getWorld()).getChunkManager().markForUpdate(context.getBlockPos());
             context.getPlayer().sendMessage(Text.translatable("item.disco_lasers.laser_configurator.pasted"), true);

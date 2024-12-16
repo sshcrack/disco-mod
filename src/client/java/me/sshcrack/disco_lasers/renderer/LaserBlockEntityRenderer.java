@@ -13,11 +13,8 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.RotationPropertyHelper;
-import org.jetbrains.annotations.Nullable;
 
 public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockEntity> {
-    @Nullable
-    private LaserModeRenderer<?> renderer;
     private final BlockEntityRendererFactory.Context ctx;
 
     public LaserBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -51,13 +48,15 @@ public class LaserBlockEntityRenderer implements BlockEntityRenderer<LaserBlockE
         matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
 
         var mode = blockEntity.getCurrentLaserMode();
+        var renderer = blockEntity.renderer;
         if (mode != null) {
-            if (renderer == null || !renderer.underlyingModeClass.isInstance(mode))
-                renderer = LaserModeRendererRegistry.createRenderer(mode);
+            if (renderer == null || (renderer instanceof LaserModeRenderer<?> r && !r.underlyingModeClass.isInstance(mode)))
+                blockEntity.renderer = LaserModeRendererRegistry.createRenderer(mode);
 
-            if (!mode.getColors().isEmpty()) {
+            renderer = blockEntity.renderer;
+            if (!mode.getColors().isEmpty() && renderer instanceof LaserModeRenderer<?> r) {
                 //noinspection unchecked
-                ((LaserModeRenderer<LaserMode>) renderer).render(mode, blockEntity, tickDelta, matrixStack, vertexConsumerProvider, light, overlay);
+                ((LaserModeRenderer<LaserMode>) r).render(mode, blockEntity, tickDelta, matrixStack, vertexConsumerProvider, light, overlay);
             }
         }
 

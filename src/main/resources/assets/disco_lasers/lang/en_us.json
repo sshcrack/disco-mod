@@ -1,6 +1,7 @@
 {
   "block.disco_lasers.laser_block.modes.spread": "Spread",
   "block.disco_lasers.laser_block.modes.random": "Random",
+  "block.disco_lasers.laser_block.modes.off": "Off",
   "block.disco_lasers.laser_block": "Laser Block",
   "color.disco_lasers.static": "Static",
   "color.disco_lasers.rainbow": "Rainbow",

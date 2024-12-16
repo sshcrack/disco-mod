@@ -36,7 +36,7 @@ public class LaserControllerItem extends Item {
         var stack = user.getStackInHand(hand);
         if (user.isSneaking()) {
             stack.set(ModDataComponentTypes.LINKED_LASERS, new ArrayList<>());
-            user.sendMessage(Text.translatable("item.disco_lasers.laser_controller.json.clear"), true);
+            user.sendMessage(Text.translatable("item.disco_lasers.laser_controller.clear"), true);
             return TypedActionResult.success(stack);
         }
 

@@ -1,6 +1,7 @@
 package me.sshcrack.disco_lasers.blocks.modes;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import me.sshcrack.disco_lasers.registries.ModLaserModes;
 import me.sshcrack.disco_lasers.screen.UiManageable;
 import me.sshcrack.disco_lasers.util.color.LaserColor;
@@ -33,4 +34,9 @@ public abstract class LaserMode {
     }
 
     public abstract UiManageable<? extends LaserMode> getUI();
+
+    public LaserMode expensiveClone() {
+        var json = LASER_CODEC.encodeStart(JsonOps.INSTANCE, this).getOrThrow();
+        return LASER_CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
+    }
 }

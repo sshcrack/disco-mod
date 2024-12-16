@@ -19,7 +19,7 @@ public abstract class LaserModeRenderer<T extends LaserMode> {
 
     public abstract void render(T mode, LaserBlockEntity blockEntity, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, int overlay);
 
-    protected static void renderDefaultBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, long worldTime, int yOffset, int maxY, int color) {
+    protected static void renderDefaultBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, long worldTime, int yOffset, float maxY, int color) {
         renderBeam(matrices, vertexConsumers, LASER_TEXTURE, tickDelta, 1.0F, worldTime, yOffset, maxY, color, 0.03F, 0.25F);
     }
 
@@ -31,12 +31,12 @@ public abstract class LaserModeRenderer<T extends LaserMode> {
             float heightScale,
             long worldTime,
             int yOffset,
-            int maxY,
+            float maxY,
             int color,
             float innerRadius,
             float outerRadius
     ) {
-        int height = yOffset + maxY;
+        float height = yOffset + maxY;
 
         float rotationY = 0;//(float) Math.floorMod(worldTime, 40) * 0+ tickDelta;
 
@@ -47,7 +47,7 @@ public abstract class LaserModeRenderer<T extends LaserMode> {
         float x3 = -innerRadius;
         float z4 = -innerRadius;
         float v2 = -1.0F + h;
-        float v1 = (float) maxY * heightScale * (0.5F / innerRadius) + v2;
+        float v1 = maxY * heightScale * (0.5F / innerRadius) + v2;
         renderBeamLayer(
                 matrices,
                 vertexConsumers.getBuffer(RenderLayer.getBeaconBeam(textureId, false)),
@@ -75,7 +75,7 @@ public abstract class LaserModeRenderer<T extends LaserMode> {
             VertexConsumer vertices,
             int color,
             int yOffset,
-            int height,
+            float height,
             float x1,
             float z1,
             float x2,
@@ -101,7 +101,7 @@ public abstract class LaserModeRenderer<T extends LaserMode> {
             VertexConsumer vertices,
             int color,
             int yOffset,
-            int height,
+            float height,
             float x1,
             float z1,
             float x2,
@@ -117,8 +117,8 @@ public abstract class LaserModeRenderer<T extends LaserMode> {
         renderBeamVertex(matrix, vertices, color, height, x2, z2, u1, v1);
     }
 
-    protected static void renderBeamVertex(MatrixStack.Entry matrix, VertexConsumer vertices, int color, int y, float x, float z, float u, float v) {
-        vertices.vertex(matrix, x, (float) y, z)
+    protected static void renderBeamVertex(MatrixStack.Entry matrix, VertexConsumer vertices, int color, float y, float x, float z, float u, float v) {
+        vertices.vertex(matrix, x, y, z)
                 .color(color)
                 .texture(u, v)
                 .overlay(OverlayTexture.DEFAULT_UV)

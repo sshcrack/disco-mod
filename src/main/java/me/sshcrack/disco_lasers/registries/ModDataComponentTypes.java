@@ -19,18 +19,19 @@ public class ModDataComponentTypes {
             ComponentType.<List<BlockPos>>builder().codec(BlockPos.CODEC.listOf()).build()
     );
 
-    public record LaserData(List<LaserMode> mode, int index) {
+    public record LaserData(List<LaserMode> mode, int index, float distance) {
     }
 
     public static final MapCodec<LaserData> LASER_DATA_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             LaserMode.LASER_CODEC.listOf().fieldOf("modes").forGetter(LaserData::mode),
-            Codec.INT.fieldOf("index").forGetter(LaserData::index)
+            Codec.INT.fieldOf("index").forGetter(LaserData::index),
+            Codec.FLOAT.fieldOf("distance").forGetter(LaserData::distance)
     ).apply(instance, LaserData::new));
 
 
     public static final ComponentType<LaserData> LASER_DATA = Registry.register(
             Registries.DATA_COMPONENT_TYPE,
-            DiscoLasers.ref("laseer_data"),
+            DiscoLasers.ref("laser_data"),
             ComponentType.<LaserData>builder().codec(LASER_DATA_CODEC.codec()).build()
     );
 
