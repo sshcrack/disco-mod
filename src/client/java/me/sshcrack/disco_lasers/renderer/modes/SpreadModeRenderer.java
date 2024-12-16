@@ -15,8 +15,8 @@ public class SpreadModeRenderer extends LaserModeRenderer<SpreadMode> {
         int k = 0;
 
 
-        float deltaRotation = (MathHelper.floorMod(worldTime, 40) + tickDelta) / (40.0f / 2) - 1.0f;
-        float radDelta = MathHelper.sin(deltaRotation * MathHelper.PI * mode.getTiltSpeed());
+        float deltaRotation = (MathHelper.floorMod(worldTime * mode.getTiltSpeed(), 40) + tickDelta * mode.getTiltSpeed()) / (40.0f / 2) - 1.0f;
+        float radDelta = MathHelper.sin(deltaRotation * MathHelper.PI);
 
         matrixStack.push();
         matrixStack.multiply(RotationAxis.NEGATIVE_Z.rotation(-(mode.getSpreadAngle() / 2f)));

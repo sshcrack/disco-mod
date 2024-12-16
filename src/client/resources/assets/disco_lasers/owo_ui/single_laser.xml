@@ -319,7 +319,7 @@
                     <flow-layout direction="horizontal">
                         <children>
                             <label>
-                                <text>Tilt Angle</text>
+                                <text>Tilt Speed</text>
                             </label>
                             <discrete-slider min="0" max="3" id="mode.spread.tilt-speed">
                                 <decimal-places>2</decimal-places>

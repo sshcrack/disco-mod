@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-public class RainbowColor implements LaserColor {
+public class RainbowColor extends LaserColor {
     public static MutableObject<UiManageable.UiManageableFactory<RainbowColor>> UI_FACTORY = new MutableObject<>();
 
     public static final MapCodec<RainbowColor> CODEC = RecordCodecBuilder.mapCodec(e ->
@@ -74,5 +74,10 @@ public class RainbowColor implements LaserColor {
             ui = UI_FACTORY.getValue().create(this);
 
         return ui;
+    }
+
+    @Override
+    public LaserColor clone() {
+        return new RainbowColor(offset, animationSpeed);
     }
 }

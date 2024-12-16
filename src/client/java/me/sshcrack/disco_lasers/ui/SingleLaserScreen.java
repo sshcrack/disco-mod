@@ -145,7 +145,7 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
             setColor(firstColor);
 
         rootComponent.childById(ButtonComponent.class, "add-color").onPress(e -> {
-            currentMode.addColor(currentColor);
+            currentMode.addColor(currentColor.clone());
 
             recalculateRainbowOffsets();
             updateColorCount();
@@ -155,7 +155,7 @@ public class SingleLaserScreen extends BaseUIModelHandledScreen<FlowLayout, Sing
 
         rootComponent.childById(ButtonComponent.class, "add-color-5x").onPress(e -> {
             for (int i = 0; i < 5; i++) {
-                currentMode.addColor(currentColor);
+                currentMode.addColor(currentColor.clone());
             }
 
             updateColorCount();

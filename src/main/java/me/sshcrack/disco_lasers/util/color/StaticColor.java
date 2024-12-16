@@ -6,7 +6,7 @@ import me.sshcrack.disco_lasers.screen.UiManageable;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-public class StaticColor implements LaserColor {
+public class StaticColor extends LaserColor {
     public static MutableObject<UiManageable.UiManageableFactory<StaticColor>> UI_FACTORY = new MutableObject<>();
     public static final MapCodec<StaticColor> CODEC = Codec.INT.xmap(StaticColor::new, StaticColor::getARGB).fieldOf("color");
     private int color;
@@ -41,5 +41,10 @@ public class StaticColor implements LaserColor {
             ui = UI_FACTORY.getValue().create(this);
 
         return ui;
+    }
+
+    @Override
+    public LaserColor clone() {
+        return new StaticColor(color);
     }
 }
