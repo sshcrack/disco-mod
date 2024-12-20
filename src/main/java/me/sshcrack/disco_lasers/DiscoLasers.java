@@ -2,6 +2,9 @@ package me.sshcrack.disco_lasers;
 
 import me.sshcrack.disco_lasers.registries.*;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ public class DiscoLasers implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ModNetworking.initialize();
         ModDataComponentTypes.initialize();
         ModLaserColor.initialize();
         ModLaserModes.initialize();

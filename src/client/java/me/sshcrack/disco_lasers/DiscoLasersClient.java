@@ -6,6 +6,7 @@ import me.sshcrack.disco_lasers.blocks.modes.RandomMode;
 import me.sshcrack.disco_lasers.blocks.modes.SpreadMode;
 import me.sshcrack.disco_lasers.registries.ModBlockEntityTypes;
 import me.sshcrack.disco_lasers.registries.ModHandledScreens;
+import me.sshcrack.disco_lasers.registries.ModItems;
 import me.sshcrack.disco_lasers.registries.ModNetworking;
 import me.sshcrack.disco_lasers.renderer.LaserBlockEntityRenderer;
 import me.sshcrack.disco_lasers.renderer.modes.OffModeRenderer;
@@ -17,6 +18,7 @@ import me.sshcrack.disco_lasers.ui.initializers.ManageableRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.util.ActionResult;
 
 public class DiscoLasersClient implements ClientModInitializer {
 
@@ -44,5 +46,13 @@ public class DiscoLasersClient implements ClientModInitializer {
                 laser.setDistance(message.distance());
             }
         });
+
+        DoAttackCallback.EVENT.register(((player, world, stack) -> {
+            if (!stack.isOf(ModItems.LASER_CONTROLLER_ITEM))
+                return ActionResult.PASS;
+
+            ModNetworking.LASER_CONTROL_CHANNEL.clientHandle().send(new ModNetworking.AllLasersOff());
+            return ActionResult.CONSUME;
+        }));
     }
 }

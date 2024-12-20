@@ -39,7 +39,7 @@
     "fabric-api": "*",
     "voicechat": ">=${minecraft_version}-${voicechat_api_version}",
     "prism": ">=${prism_version}",
-    "owo-lib": ">=${owo_version}"
+    "owo": ">=${owo_version}"
   },
   "suggests": {}
 }

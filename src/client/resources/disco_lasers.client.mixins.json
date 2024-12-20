@@ -3,6 +3,7 @@
   "package": "me.sshcrack.disco_lasers.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1
